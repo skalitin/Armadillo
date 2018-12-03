@@ -2,18 +2,18 @@
 @using Microsoft.JSInterop
 @using System.Threading.Tasks
 
-<div class="my-component">
+<div id="network" class="my-component">
     Subcases
 </div>
 
 @functions {
-  //  public static Task RenderNetwork()
-   // {
-    //    return JSRuntime.Current.InvokeAsync<string>("RenderNetwork");
-   // } 
+    public static async Task RenderNetworkAsync()
+    {
+        await JSRuntime.Current.InvokeAsync<string>("RenderNetwork");
+    } 
 
-   // protected override async Task OnInitAsync()
-   // {
-    //    await RenderNetwork();
-   // }
+    protected override async Task OnAfterRenderAsync()
+    {
+        await RenderNetworkAsync();
+    }
 }

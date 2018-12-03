@@ -14,8 +14,8 @@ function RenderNetwork(ignore) {
         {from: 2, to: 5}
     ]);
 
-    var container = document.getElementById('my-component');
-
+    var container = document.getElementById('network');
+ 
     var data = {
         nodes: nodes,
         edges: edges
