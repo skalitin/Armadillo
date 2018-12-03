@@ -3,16 +3,17 @@
 @using System.Threading.Tasks
 
 <div class="my-component">
+    Subcases
 </div>
 
 @functions {
-    public static Task RenderNetwork()
-    {
-        return JSRuntime.Current.InvokeAsync<string>("RenderNetwork");
-    } 
+  //  public static Task RenderNetwork()
+   // {
+    //    return JSRuntime.Current.InvokeAsync<string>("RenderNetwork");
+   // } 
 
-    protected override async Task OnInitAsync()
-    {
-        await RenderNetwork();
-    }
+   // protected override async Task OnInitAsync()
+   // {
+    //    await RenderNetwork();
+   // }
 }
