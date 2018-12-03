@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Armadillo.Shared\Armadillo.Shared.csproj" />
+    <ProjectReference Include="..\Armadillo.Chart\Armadillo.Chart.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Armadillo.Shared\Armadillo.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Watch Include="..\**\*.cshtml" />
+  </ItemGroup>
+
 </Project>
