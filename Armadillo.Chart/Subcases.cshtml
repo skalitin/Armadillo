@@ -1,3 +1,18 @@
-﻿<div class="my-component">
-    This Blazor component is defined in the <strong>Chart</strong> package.
+﻿@using Armadillo.Chart
+@using Microsoft.JSInterop
+@using System.Threading.Tasks
+
+<div class="my-component">
 </div>
+
+@functions {
+    public static Task RenderNetwork()
+    {
+        return JSRuntime.Current.InvokeAsync<string>("RenderNetwork");
+    } 
+
+    protected override async Task OnInitAsync()
+    {
+        await RenderNetwork();
+    }
+}
