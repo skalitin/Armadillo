@@ -11,6 +11,6 @@ namespace Armadillo.Shared
         public string Customer { get; set; }
         public string Owner { get; set; }
         public string Status { get; set; }
-        // public int Level { get; set; }
+        public string Level { get; set; }
     }
 }

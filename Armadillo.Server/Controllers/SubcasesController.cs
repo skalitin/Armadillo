@@ -14,14 +14,15 @@ namespace Armadillo.Server.Controllers
         public IEnumerable<Subcase> Subcases()
         {
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new Subcase
+            var max = rng.Next(5, 15);
+            return Enumerable.Range(1, max).Select(index => new Subcase
             {
                 Id = String.Format("{0}", index),
-                Title = "Test title",
-                // Level = rng.Next(5),
-                Customer = "",
-                Owner = "",
-                Status = ""
+                Title = "Title " + rng.Next(100),
+                Level = "" + rng.Next(1, 4),
+                Customer = "Customer " + rng.Next(1, 5),
+                Owner = "Owner " + rng.Next(1, 7),
+                Status = "Status " + rng.Next(1, 3),
             });
         }
     }
