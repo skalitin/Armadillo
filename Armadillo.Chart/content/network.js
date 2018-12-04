@@ -1,4 +1,9 @@
-function RenderNetwork(ignore) {
+function Render2(sub) {
+    console.log(sub);
+}
+
+
+function RenderNetwork() {
     var nodes = new vis.DataSet([
         {id: 1, label: 'Node 1'},
         {id: 2, label: 'Node 2'},

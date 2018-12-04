@@ -1,12 +1,16 @@
 ﻿@using Armadillo.Chart
 @using Microsoft.JSInterop
 @using System.Threading.Tasks
+@using Armadillo.Shared
 
 <div id="network" class="my-component">
     Subcases
 </div>
 
 @functions {
+    [Parameter]
+    private Subcase[] Subcases { get; set; }
+
     public static async Task RenderNetworkAsync()
     {
         await JSRuntime.Current.InvokeAsync<string>("RenderNetwork");
@@ -14,6 +18,8 @@
 
     protected override async Task OnAfterRenderAsync()
     {
+        Console.WriteLine("AFTER Render {0}", Subcases);
         await RenderNetworkAsync();
+        await JSRuntime.Current.InvokeAsync<string>("Render2", Subcases);
     }
 }
