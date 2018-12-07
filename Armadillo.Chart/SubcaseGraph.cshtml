@@ -2,6 +2,7 @@
 @using Microsoft.JSInterop
 @using System.Threading.Tasks
 @using Armadillo.Shared
+@using System.Linq
 
 <div id="network" class="my-component">
 </div>
@@ -10,18 +11,24 @@
     [Parameter]
     private Product Product { get; set; }
 
-    public static async Task RenderNetworkAsync()
+    public static async Task RenderNetworkAsync(Network network)
     {
-        await JSRuntime.Current.InvokeAsync<string>("RenderNetwork");
+        await JSRuntime.Current.InvokeAsync<string>("RenderNetwork", network);
     } 
 
     protected override async Task OnAfterRenderAsync()
     {
-        Console.WriteLine("OnAfterRenderAsync: {0}", Product);
-        await RenderNetworkAsync();
         if(Product != null)
         {
-            await JSRuntime.Current.InvokeAsync<string>("Render2", Product);
+            var nodes = Product.Subcases.Select(each => new Node() {
+                Id = each.Id,
+                Label = each.Title
+            });
+            var network = new Network() {
+                Nodes = nodes.ToArray(),
+                Edges = new Edge[] {}
+            };
+            await RenderNetworkAsync(network);
         }
     }
 }
