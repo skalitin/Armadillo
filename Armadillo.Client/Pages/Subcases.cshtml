@@ -2,14 +2,14 @@
 @page "/subcases"
 @inject HttpClient Http
 
-<h1>Subcases</h1>
-
-@if (subcases == null)
+@if (product == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+    <h1>Subcases for @product.Name</h1>
+
     <table class="table">
         <thead>
             <tr>
@@ -22,14 +22,14 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var subcase in subcases)
+            @foreach (var subcase in product.Subcases)
             {
                 <tr>
                     <td>@subcase.Id</td>
                     <td>@subcase.Title</td>
                     <td>@subcase.Customer</td>
                     <td>@subcase.Owner</td>
-                         <td>@subcase.Level</td>
+                    <td>@subcase.Level</td>
                     <td>@subcase.Status</td>
                 </tr>
             }
@@ -38,10 +38,10 @@ else
 }
 
 @functions {
-    Subcase[] subcases;
+    Product product;
 
     protected override async Task OnInitAsync()
     {
-        subcases = await Http.GetJsonAsync<Subcase[]>("api/subcases");
+        product = await Http.GetJsonAsync<Product>("api/product");
     }
 }

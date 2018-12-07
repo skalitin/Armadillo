@@ -4,12 +4,11 @@
 @using Armadillo.Shared
 
 <div id="network" class="my-component">
-    Subcases
 </div>
 
 @functions {
     [Parameter]
-    private Subcase[] Subcases { get; set; }
+    private Product Product { get; set; }
 
     public static async Task RenderNetworkAsync()
     {
@@ -18,8 +17,11 @@
 
     protected override async Task OnAfterRenderAsync()
     {
-        Console.WriteLine("AFTER Render {0}", Subcases);
+        Console.WriteLine("OnAfterRenderAsync: {0}", Product);
         await RenderNetworkAsync();
-        await JSRuntime.Current.InvokeAsync<string>("Render2", Subcases);
+        if(Product != null)
+        {
+            await JSRuntime.Current.InvokeAsync<string>("Render2", Product);
+        }
     }
 }

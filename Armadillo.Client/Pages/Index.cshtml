@@ -5,14 +5,14 @@
 
 <h1>Subcase Graph</h1>
 
-<SubcaseGraph Subcases=@subcases/>
+<SubcaseGraph Product=@product/>
 
 
 @functions {
-    Subcase[] subcases;
+    Product product;
 
     protected override async Task OnInitAsync()
     {
-        subcases = await Http.GetJsonAsync<Subcase[]>("api/subcases");
+        product = await Http.GetJsonAsync<Product>("api/product");
     }
 }

@@ -11,6 +11,15 @@ namespace Armadillo.Server.Controllers
     public class SubcasesController : Controller
     {
         [HttpGet("[action]")]
+        public Product Product()
+        {   
+            return new Product()
+            {
+                Name = "RMAD",
+                Subcases = Subcases().ToArray()
+            };
+        }
+        [HttpGet("[action]")]
         public IEnumerable<Subcase> Subcases()
         {
             var rng = new Random();
