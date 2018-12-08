@@ -27,7 +27,8 @@
             var subcases = Product.Subcases;
             var nodes = subcases.Select(each => new Node() {
                 Id = each.Id,
-                Label = each.Title
+                Label = each.Title,
+                Group = "subcases"
             }).ToList();
             var edges = new List<Edge>();
             

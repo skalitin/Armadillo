@@ -9,7 +9,17 @@ function RenderNetwork(network) {
     };
 
     var options = {
+        nodes: {
+          font: { size: 30 }
+        },
+        edges: {
+        },
         groups: {
+          subcases: {
+            shape: 'circle',
+            size: 50,
+            color: 'lime'
+          },
           customers: {
             shape: 'icon',
             icon: {
