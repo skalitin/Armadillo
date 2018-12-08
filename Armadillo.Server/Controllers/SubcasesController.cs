@@ -23,7 +23,7 @@ namespace Armadillo.Server.Controllers
         public IEnumerable<Subcase> Subcases()
         {
             var rng = new Random();
-            var max = rng.Next(5, 15);
+            var max = rng.Next(10, 15);
             return Enumerable.Range(1, max).Select(index => new Subcase
             {
                 Id = String.Format("{0}", index),

@@ -1,6 +1,8 @@
 ﻿
 .my-component {
     border: 2px dashed red;
+    height: 700px;
+      width: 700px;
     padding: 1em;
     margin: 1em 0;
 }

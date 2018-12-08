@@ -8,7 +8,28 @@ function RenderNetwork(network) {
         edges: edges
     };
 
-    var options = {};
+    var options = {
+        groups: {
+          customers: {
+            shape: 'icon',
+            icon: {
+              face: 'FontAwesome',
+              code: '\uf1ad',
+              size: 50,
+              color: '#f0a30a'
+            }
+          },
+          owners: {
+            shape: 'icon',
+            icon: {
+              face: 'FontAwesome',
+              code: '\uf007',
+              size: 50,
+              color: '#aa00ff'
+            }
+          }
+        }
+      };
 
     var container = document.getElementById('network');
     var network = new vis.Network(container, data, options);

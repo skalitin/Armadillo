@@ -3,6 +3,7 @@
 @using System.Threading.Tasks
 @using Armadillo.Shared
 @using System.Linq
+@using System.Collections.Generic
 
 <div id="network" class="my-component">
 </div>
@@ -20,13 +21,63 @@
     {
         if(Product != null)
         {
-            var nodes = Product.Subcases.Select(each => new Node() {
+            var showCustomers = true;
+            var showOwners = true;
+
+            var subcases = Product.Subcases;
+            var nodes = subcases.Select(each => new Node() {
                 Id = each.Id,
                 Label = each.Title
-            });
+            }).ToList();
+            var edges = new List<Edge>();
+            
+            if(showCustomers)
+            {
+                var customers = subcases.GroupBy(each => each.Customer, each => each, 
+                (key, group) => new { Customer = key, Subcases = group});
+                foreach (var item in customers)
+                {
+                    nodes.Add(new Node() {
+                        Id = item.Customer,
+                        Label = item.Customer,
+                        Group = "customers"
+                    });
+
+                    foreach (var subcase in item.Subcases)
+                    {
+                        edges.Add(new Edge() {
+                            From = item.Customer,
+                            To = subcase.Id
+                        });
+                    }
+                }
+            }
+
+            if(showOwners)
+            {
+                var owners = subcases.GroupBy(each => each.Owner, each => each, 
+                (key, group) => new { Owner = key, Subcases = group});
+                foreach (var item in owners)
+                {
+                    nodes.Add(new Node() {
+                        Id = item.Owner,
+                        Label = item.Owner,
+                        Group = "owners"
+                    });
+
+                    foreach (var subcase in item.Subcases)
+                    {
+                        edges.Add(new Edge() {
+                            From = item.Owner,
+                            To = subcase.Id
+                        });
+                    }
+                }
+            }
+
             var network = new Network() {
                 Nodes = nodes.ToArray(),
-                Edges = new Edge[] {}
+                Edges = edges.ToArray()
             };
             await RenderNetworkAsync(network);
         }
