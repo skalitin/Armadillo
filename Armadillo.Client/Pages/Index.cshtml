@@ -15,6 +15,8 @@
 
     protected override async Task OnInitAsync()
     {
+        showCustomers = true;
+        showOwners = true;
         product = await Http.GetJsonAsync<Product>("api/product");
     }
 }

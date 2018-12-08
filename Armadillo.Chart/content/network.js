@@ -11,8 +11,6 @@ function RenderNetwork(network) {
     var options = {
         nodes: {
           borderWidth: 1,
-          font: { size: 20 },
-          // size: 30
         },
         edges: {
           width: 2,
@@ -23,23 +21,25 @@ function RenderNetwork(network) {
         groups: {
           subcases: {
             shape: 'dot',
-            // color: 'lime'
+            font: { size: 20 },
           },
           customers: {
             shape: 'icon',
+            font: { size: 15 },
             icon: {
               face: 'FontAwesome',
               code: '\uf1ad',
-              size: 50,
+              size: 30,
               color: '#f0a30a'
             }
           },
           owners: {
             shape: 'icon',
+            font: { size: 15 },
             icon: {
               face: 'FontAwesome',
               code: '\uf007',
-              size: 50,
+              size: 30,
               color: '#aa00ff'
             }
           }
