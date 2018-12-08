@@ -3,12 +3,15 @@
 @using Armadillo.Shared
 @inject HttpClient Http
 
-<h1>Subcase Graph</h1>
+<input type="checkbox" bind="@showCustomers" /> Show customers<br />
+<input type="checkbox" bind="@showOwners" /> Show owners<br />
 
-<SubcaseGraph Product=@product/>
+<SubcaseGraph Product=@product ShowCustomers=@showCustomers ShowOwners=@showOwners/>
 
 @functions {
     Product product;
+    bool showCustomers;
+    bool showOwners;
 
     protected override async Task OnInitAsync()
     {

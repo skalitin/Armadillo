@@ -5,82 +5,87 @@
 @using System.Linq
 @using System.Collections.Generic
 
-<div id="network" class="my-component">
-</div>
+<div id="network"/>
 
 @functions {
     [Parameter]
     private Product Product { get; set; }
+   
+    [Parameter]
+    private bool ShowCustomers { get; set; }
+    
+    [Parameter]
+    private bool ShowOwners { get; set; }
 
     public static async Task RenderNetworkAsync(Network network)
     {
         await JSRuntime.Current.InvokeAsync<string>("RenderNetwork", network);
     } 
 
+    private string GetTitle(Subcase subcase)
+    {
+        return
+            $"<b>{subcase.Id}</b><br>" + 
+            $"Level: {subcase.Level}<br>" + 
+            $"Status: {subcase.Status}<br>" + 
+            $"Customer: {subcase.Customer}<br>" + 
+            $"Owner: {subcase.Owner}<br>" + 
+            $"{subcase.Title}";
+    }
+
     protected override async Task OnAfterRenderAsync()
     {
-        if(Product != null)
+        if(Product == null)
         {
-            var showCustomers = true;
-            var showOwners = true;
-
-            var subcases = Product.Subcases;
-            var nodes = subcases.Select(each => new Node() {
-                Id = each.Id,
-                Label = each.Title,
-                Group = "subcases"
-            }).ToList();
-            var edges = new List<Edge>();
-            
-            if(showCustomers)
-            {
-                var customers = subcases.GroupBy(each => each.Customer, each => each, 
-                (key, group) => new { Customer = key, Subcases = group});
-                foreach (var item in customers)
-                {
-                    nodes.Add(new Node() {
-                        Id = item.Customer,
-                        Label = item.Customer,
-                        Group = "customers"
-                    });
-
-                    foreach (var subcase in item.Subcases)
-                    {
-                        edges.Add(new Edge() {
-                            From = item.Customer,
-                            To = subcase.Id
-                        });
-                    }
-                }
-            }
-
-            if(showOwners)
-            {
-                var owners = subcases.GroupBy(each => each.Owner, each => each, 
-                (key, group) => new { Owner = key, Subcases = group});
-                foreach (var item in owners)
-                {
-                    nodes.Add(new Node() {
-                        Id = item.Owner,
-                        Label = item.Owner,
-                        Group = "owners"
-                    });
-
-                    foreach (var subcase in item.Subcases)
-                    {
-                        edges.Add(new Edge() {
-                            From = item.Owner,
-                            To = subcase.Id
-                        });
-                    }
-                }
-            }
-
-            var network = new Network() {
-                Nodes = nodes.ToArray(),
-                Edges = edges.ToArray()
-            };
-            await RenderNetworkAsync(network);
+            return;
         }
+
+        var subcases = Product.Subcases;
+
+        var nodes = subcases
+            .Select(each => new Node(each.Id, each.Id) {
+                Title = GetTitle(each),
+                Color = each.Status == "Status 1" ? "red" : "lime",
+                Size = 15 + 5 * (4 - Int32.Parse(each.Level))
+            })
+            .ToList();
+        var edges = new List<Edge>();
+        
+        if(ShowCustomers)
+        {
+            var customers = subcases.GroupBy(each => each.Customer,
+                each => each, 
+                (key, group) => new { Customer = key, Subcases = group});
+            foreach (var item in customers)
+            {
+                nodes.Add(new Node(item.Customer, item.Customer, "customers"));
+                foreach (var subcase in item.Subcases)
+                {
+                    edges.Add(new Edge(item.Customer, subcase.Id));
+                }
+            }
+        }
+
+        if(ShowOwners)
+        {
+            var owners = subcases.GroupBy(each => each.Owner, 
+                each => each, 
+                (key, group) => new { Owner = key, Subcases = group});
+            foreach (var item in owners)
+            {
+                nodes.Add(new Node(item.Owner, item.Owner, "owners"));
+                foreach (var subcase in item.Subcases)
+                {
+                    edges.Add(new Edge(item.Owner, subcase.Id));
+                }
+            }
+        }
+
+        var network = new Network() {
+            Nodes = nodes.ToArray(),
+            Edges = edges.ToArray()
+        };
+
+        await RenderNetworkAsync(network);
     }
 }

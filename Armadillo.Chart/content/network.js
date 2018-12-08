@@ -10,15 +10,20 @@ function RenderNetwork(network) {
 
     var options = {
         nodes: {
-          font: { size: 30 }
+          borderWidth: 1,
+          font: { size: 20 },
+          // size: 30
         },
         edges: {
+          width: 2,
+          // color: {
+          //   inherit: 'both'
+          // }
         },
         groups: {
           subcases: {
-            shape: 'circle',
-            size: 50,
-            color: 'lime'
+            shape: 'dot',
+            // color: 'lime'
           },
           customers: {
             shape: 'icon',
