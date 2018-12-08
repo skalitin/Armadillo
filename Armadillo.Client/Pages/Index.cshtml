@@ -3,12 +3,19 @@
 @using Armadillo.Shared
 @inject HttpClient Http
 
+<select id="select-box" bind="@productName">
+        <option value="RMAD">RMAD</option>
+        <option value="ODME">ODME</option>
+        <option value="MMAD">MMAD</option>
+</select>
+
 <input type="checkbox" bind="@showCustomers" /> Show customers<br />
 <input type="checkbox" bind="@showOwners" /> Show owners<br />
 
 <SubcaseGraph Product=@product ShowCustomers=@showCustomers ShowOwners=@showOwners/>
 
 @functions {
+    string productName;
     Product product;
     bool showCustomers;
     bool showOwners;
