@@ -1,5 +1,5 @@
 function RenderNetwork(network) {
-    console.log(network);
+    // console.log(network);
 
     var nodes = new vis.DataSet(network.nodes);
     var edges = new vis.DataSet(network.edges);
