@@ -5,25 +5,21 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using HtmlAgilityPack;
 using Armadillo.Shared;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Armadillo.Siebel
 {
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {
-        private string url_;
-
-        public ReportServerDataProvider()
-        {
-            //  url = @"https://tfsreports.webapps.quest.com/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&Products=Recovery%20Manager%20for%20AD&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
-            url_ = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&Products=Recovery%20Manager%20for%20AD&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
-        }
-
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             var page = "";
             try
             {
-                page = await GetPageAsync(url_);
+                var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+                var url = QueryHelpers.AddQueryString(template, "Products", product);
+
+                page = await GetPageAsync(url);
             }
             catch (Exception ex)
             {
@@ -50,10 +46,9 @@ namespace Armadillo.Siebel
                 {
                     Id = cells[1].InnerText,
                     Title = cells[2].InnerText,
-                    //Level = cells[3].InnerText,
-                    Level = "3",
+                    Level = cells[3].InnerText.Substring("Level ".Length),
                     Owner = cells[4].InnerText,
-                    Status = cells[7].InnerText,
+                    Status = cells[8].InnerText,
                     Customer = cells[9].InnerText
                 };
                 
@@ -74,10 +69,10 @@ namespace Armadillo.Siebel
             {
                 "Recovery Manager for AD",
                 "Recovery Manager for Exchange",
+                "OnDemand Migration for Email",
                 "InTrust",
                 "Migration Mgr for AD",
                 "On Demand Migrations",
-                "OnDemand Migration for Email",
                 "All"
             };
         }

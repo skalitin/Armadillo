@@ -27,7 +27,8 @@ namespace Armadillo.Server
                 });
             });
 
-            services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
+            // services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
+            services.AddSingleton<ISubcaseDataProdiver, ReportServerDataProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

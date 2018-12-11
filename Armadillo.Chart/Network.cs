@@ -33,7 +33,7 @@ namespace Armadillo.Chart
 
     public class Network
     {
-        public Node[] Nodes { get; set; }
-        public Edge[] Edges { get; set; }
+        public Node[] Nodes { get; set; } = new Node[] {};
+        public Edge[] Edges { get; set; } = new Edge[] {};
     }
 }

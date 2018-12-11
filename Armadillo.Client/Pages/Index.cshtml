@@ -18,7 +18,14 @@
 <input type="checkbox" bind="@ShowCustomers" /> Show customers<br />
 <input type="checkbox" bind="@ShowOwners" /> Show owners<br />
 
-<SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+@if (ProductSubcases == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+}
 
 @functions {
     private IEnumerable<string> ProductNames { get; set; } = new string[]{};
@@ -49,9 +56,11 @@
 
     private void ReloadSubcases()
     {
+        ProductSubcases = null;
         Task.Run(async () => {
             var url = QueryHelpers.AddQueryString("api/subcases", "product", ProductName);
             ProductSubcases = await Http.GetJsonAsync<Product>(url);
+            StateHasChanged();
         });
     }
 }

@@ -17,7 +17,7 @@
     [Parameter]
     private bool ShowOwners { get; set; }
 
-    public static async Task RenderNetworkAsync(Network network)
+    public async Task RenderNetworkAsync(Network network)
     {
         await JSRuntime.Current.InvokeAsync<string>("RenderNetwork", network);
     } 
@@ -37,6 +37,7 @@
     {
         if(Product == null)
         {
+            await RenderNetworkAsync(new Network());
             return;
         }
 
@@ -45,8 +46,8 @@
         var nodes = subcases
             .Select(each => new Node(each.Id, each.Id) {
                 Title = GetTitle(each),
-                Color = each.Status == "Status 1" ? "red" : "lime",
-                Size = 15 + 5 * (4 - Int32.Parse(each.Level))
+                Color = each.Status == "Update from Support" ? "orange" : "seagreen",
+                Size = 15 + 7 * (4 - Int32.Parse(each.Level))
             })
             .ToList();
         var edges = new List<Edge>();
