@@ -1,6 +1,4 @@
 function RenderNetwork(network) {
-    // console.log(network);
-
     var nodes = new vis.DataSet(network.nodes);
     var edges = new vis.DataSet(network.edges);
     var data = {
@@ -9,6 +7,9 @@ function RenderNetwork(network) {
     };
 
     var options = {
+        physics: {
+          stabilization: false
+        },      
         nodes: {
           borderWidth: 2,
           shadow: true,
@@ -56,7 +57,7 @@ function RenderNetwork(network) {
           }
         }
       };
-
-    var container = document.getElementById('network');
-    var network = new vis.Network(container, data, options);
+    
+    var container = document.getElementById('network-wrapper');
+    window.network = new vis.Network(container, data, options);
 }

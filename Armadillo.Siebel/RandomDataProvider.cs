@@ -37,7 +37,7 @@ namespace Armadillo.Siebel
                 };
                 return Enumerable.Range(1, rng.Next(10, 15)).Select(index => new Subcase
                 {
-                    Id = String.Format("{0}-1", rng.Next(405000, 405999)),
+                    Id = String.Format("{0}-1", rng.Next(400000, 500000)),
                     Title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit " + rng.Next(100),
                     Level = "" + rng.Next(1, 4),
                     Customer = "Customer " + rng.Next(1, 5),

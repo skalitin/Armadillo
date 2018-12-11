@@ -5,6 +5,7 @@
 @using Armadillo.Shared
 @using System.Collections.Generic
 @using System.Threading.Tasks
+@using System.Timers
 @using Microsoft.AspNetCore.WebUtilities
 
 <select bind="@ProductName">
@@ -22,9 +23,13 @@
 <input type="checkbox" bind="@ShowOwners" id="show-owners"/>
 <label for="show-owners">Show owners</label>
 
+<span>&nbsp;&nbsp;</span>
+<input type="checkbox" bind="@Autorefresh" id="autorefresh"/>
+<label for="autorefresh">Auto refresh every @(timer_.Interval/60000)min.</label>
+
 @if (ProductSubcases == null)
 {
-    <p><em>Loading...</em></p>
+    <h1>Loading...</h1>
 }
 else
 {
@@ -33,6 +38,7 @@ else
 }
 
 @functions {
+    private Timer timer_ = new Timer(1000 * 60 * 30);
     private IEnumerable<string> ProductNames { get; set; } = new string[]{};
     
     private string productName_;
@@ -49,6 +55,20 @@ else
         }
     }
 
+    private bool autorefresh_ = true;
+    private bool Autorefresh
+    { 
+        get
+        {  
+             return autorefresh_;
+        }
+        set
+        {
+            autorefresh_ = value;
+            timer_.Enabled = autorefresh_;
+        }
+    }
+
     private bool ShowCustomers { get; set; } = true;
     private bool ShowOwners { get; set; } = true;
     private Product ProductSubcases { get; set; }
@@ -57,6 +77,9 @@ else
     {
         ProductNames = await Http.GetJsonAsync<IEnumerable<string>>("api/products");
         ProductName = ProductNames.FirstOrDefault();
+        
+        timer_.Elapsed += (sender, e) => ReloadSubcases();
+        timer_.Enabled = Autorefresh;
     }
 
     private void ReloadSubcases()
