@@ -27,7 +27,7 @@ namespace Armadillo.Server
                 });
             });
 
-            // services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
+            //services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
             services.AddSingleton<ISubcaseDataProdiver, ReportServerDataProvider>();
         }
 

@@ -22,6 +22,11 @@
         await JSRuntime.Current.InvokeAsync<string>("RenderNetwork", network);
     } 
 
+    private string TruncateString(string value, int maxChars)
+    {
+        return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
+    }
+
     private string GetTitle(Subcase subcase)
     {
         return
@@ -31,6 +36,21 @@
             $"Customer: {subcase.Customer}<br>" + 
             $"Owner: {subcase.Owner}<br>" + 
             $"{subcase.Title}";
+    }
+
+    private string GetColor(int level, string status)
+    {
+        if(level == 1)
+        {
+            return "red";
+        }
+
+        if(status == "Fix Provided")
+        {
+            return "green";
+        }
+
+        return status == "Update from Support" ? "orange" : "olive";
     }
 
     protected override async Task OnAfterRenderAsync()
@@ -44,10 +64,14 @@
         var subcases = Product.Subcases;
 
         var nodes = subcases
-            .Select(each => new Node(each.Id, each.Id) {
-                Title = GetTitle(each),
-                Color = each.Status == "Update from Support" ? "orange" : "seagreen",
-                Size = 15 + 7 * (4 - Int32.Parse(each.Level))
+            .Select(each => 
+            {
+                var level = Int32.Parse(each.Level);
+                return new Node(each.Id, each.Id) {
+                    Title = GetTitle(each),
+                    Color = GetColor(level, each.Status),
+                    Value = 4 - level
+                };
             })
             .ToList();
         var edges = new List<Edge>();
@@ -59,7 +83,10 @@
                 (key, group) => new { Customer = key, Subcases = group});
             foreach (var item in customers)
             {
-                nodes.Add(new Node(item.Customer, item.Customer, "customers"));
+                nodes.Add(new Node(item.Customer, TruncateString(item.Customer, 15), "customers")
+                {
+                    Title = item.Customer
+                });
                 foreach (var subcase in item.Subcases)
                 {
                     edges.Add(new Edge(item.Customer, subcase.Id));
@@ -74,7 +101,10 @@
                 (key, group) => new { Owner = key, Subcases = group});
             foreach (var item in owners)
             {
-                nodes.Add(new Node(item.Owner, item.Owner, "owners"));
+                nodes.Add(new Node(item.Owner, item.Owner, "owners")
+                {
+                    Title = item.Owner
+                });
                 foreach (var subcase in item.Subcases)
                 {
                     edges.Add(new Edge(item.Owner, subcase.Id));

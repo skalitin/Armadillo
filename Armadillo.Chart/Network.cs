@@ -16,7 +16,7 @@ namespace Armadillo.Chart
         public string Title { get; set; }
         public string Group { get; set; }
         public string Color { get; set; }
-        public int? Size { get; set; }
+        public int Value { get; set; }
     }
 
     public class Edge

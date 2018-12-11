@@ -83,7 +83,6 @@ namespace Armadillo.Siebel
             var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
             var handler = new HttpClientHandler { Credentials = credentialsCache };
             
-            Console.WriteLine("Sending request...");
             using(var httpClient = new HttpClient(handler) { BaseAddress = uri  })
             {
                 return await httpClient.GetStringAsync(url);

@@ -10,13 +10,22 @@ function RenderNetwork(network) {
 
     var options = {
         nodes: {
-          borderWidth: 1,
+          borderWidth: 2,
+          shadow: true,
+          // scaling: {
+          //   customScalingFunction: function (min, max, total, value) {
+          //     return value/total;
+          //   },
+          //   min: 5,
+          //   max: 150
+          // }
         },
         edges: {
           width: 2,
-          // color: {
-          //   inherit: 'both'
-          // }
+          shadow: true,
+          color: {
+            color: 'gray'
+          }
         },
         groups: {
           subcases: {
@@ -25,23 +34,25 @@ function RenderNetwork(network) {
           },
           customers: {
             shape: 'icon',
-            font: { size: 15 },
+            font: { size: 20 },
+            //color: 'lightskyblue',
             icon: {
               face: 'FontAwesome',
               code: '\uf1ad',
               size: 30,
-              color: '#f0a30a'
+              color: 'lightskyblue'
             }
           },
           owners: {
-            shape: 'icon',
-            font: { size: 15 },
-            icon: {
-              face: 'FontAwesome',
-              code: '\uf007',
-              size: 30,
-              color: '#aa00ff'
-            }
+            shape: 'box',
+            font: { size: 20 },
+            color: 'lightblue'
+            // icon: {
+            //   face: 'FontAwesome',
+            //   code: '\uf007',
+            //   size: 30,
+            //   color: 'blue'
+            // }
           }
         }
       };

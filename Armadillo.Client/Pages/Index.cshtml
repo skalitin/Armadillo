@@ -13,10 +13,14 @@
         <option value="@item">@item</option>        
     }
 </select>
+<span>&nbsp;&nbsp;</span>
 
-<br/>
-<input type="checkbox" bind="@ShowCustomers" /> Show customers<br />
-<input type="checkbox" bind="@ShowOwners" /> Show owners<br />
+<input type="checkbox" bind="@ShowCustomers" id="show-customers"/>
+<label for="show-customers">Show customers</label>
+
+<span>&nbsp;&nbsp;</span>
+<input type="checkbox" bind="@ShowOwners" id="show-owners"/>
+<label for="show-owners">Show owners</label>
 
 @if (ProductSubcases == null)
 {
@@ -24,6 +28,7 @@
 }
 else
 {
+    <h1>@ProductSubcases.Subcases.Length subcases</h1>
     <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
 }
 
