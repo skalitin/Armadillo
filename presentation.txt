@@ -1,0 +1,4 @@
+
+
+XAML instead of HTML and CSS #389
+https://github.com/aspnet/Blazor/issues/389
