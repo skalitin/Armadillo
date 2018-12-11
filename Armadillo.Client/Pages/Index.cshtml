@@ -1,29 +1,57 @@
 ﻿@page "/"
-@using Armadillo.Chart
-@using Armadillo.Shared
 @inject HttpClient Http
 
-<select id="select-box" bind="@productName">
-        <option value="RMAD">RMAD</option>
-        <option value="ODME">ODME</option>
-        <option value="MMAD">MMAD</option>
-</select>
-<br/>
-<input type="checkbox" bind="@showCustomers" /> Show customers<br />
-<input type="checkbox" bind="@showOwners" /> Show owners<br />
+@using Armadillo.Chart
+@using Armadillo.Shared
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using Microsoft.AspNetCore.WebUtilities
 
-<SubcaseGraph Product=@product ShowCustomers=@showCustomers ShowOwners=@showOwners/>
+<select bind="@ProductName">
+    @foreach (var item in ProductNames)
+    {
+        <option value="@item">@item</option>        
+    }
+</select>
+
+<br/>
+<input type="checkbox" bind="@ShowCustomers" /> Show customers<br />
+<input type="checkbox" bind="@ShowOwners" /> Show owners<br />
+
+<SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
 
 @functions {
-    string productName;
-    Product product;
-    bool showCustomers;
-    bool showOwners;
+    private IEnumerable<string> ProductNames { get; set; } = new string[]{};
+    
+    private string productName_;
+    private string ProductName
+    { 
+        get
+        {  
+             return productName_;
+        }
+        set
+        {
+            productName_ = value;
+            ReloadSubcases();
+        }
+    }
+
+    private bool ShowCustomers { get; set; } = true;
+    private bool ShowOwners { get; set; } = true;
+    private Product ProductSubcases { get; set; }
 
     protected override async Task OnInitAsync()
     {
-        showCustomers = true;
-        showOwners = true;
-        product = await Http.GetJsonAsync<Product>("api/subcases");
+        ProductNames = await Http.GetJsonAsync<IEnumerable<string>>("api/products");
+        ProductName = ProductNames.FirstOrDefault();
+    }
+
+    private void ReloadSubcases()
+    {
+        Task.Run(async () => {
+            var url = QueryHelpers.AddQueryString("api/subcases", "product", ProductName);
+            ProductSubcases = await Http.GetJsonAsync<Product>(url);
+        });
     }
 }

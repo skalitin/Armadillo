@@ -27,6 +27,7 @@ namespace Armadillo.Server.Controllers
         [HttpGet("subcases")]
         public async Task<Product> Subcases(string product)
         {
+            Console.WriteLine("Loading subcases for {0}", product);
             var subcases = await dataProdiver_.GetSubcasesAsync(product);
             return new Product()
             {
