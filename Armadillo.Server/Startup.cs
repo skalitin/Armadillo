@@ -1,3 +1,4 @@
+using Armadillo.Siebel;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,8 @@ namespace Armadillo.Server
                     WasmMediaTypeNames.Application.Wasm,
                 });
             });
+
+            services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
