@@ -39,21 +39,22 @@ function RenderNetwork(network) {
             //color: 'lightskyblue',
             icon: {
               face: 'FontAwesome',
-              code: '\uf1ad',
+              code: '\uf0c0',
               size: 30,
-              color: 'lightskyblue'
+              color: 'blue'
             }
           },
           owners: {
-            shape: 'box',
+            shape: 'icon',
+            //shape: 'box',
             font: { size: 20 },
-            color: 'lightblue'
-            // icon: {
-            //   face: 'FontAwesome',
-            //   code: '\uf007',
-            //   size: 30,
-            //   color: 'blue'
-            // }
+            //color: 'lightblue',
+            icon: {
+              face: 'FontAwesome',
+              code: '\uf007',
+              size: 30,
+              color: 'lightblue'
+            }
           }
         }
       };
