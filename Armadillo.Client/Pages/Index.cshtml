@@ -25,7 +25,7 @@
 
 <span>&nbsp;&nbsp;</span>
 <input type="checkbox" bind="@Autorefresh" id="autorefresh"/>
-<label for="autorefresh">Auto refresh every @(timer_.Interval/60000)min.</label>
+<label for="autorefresh">Auto refresh every @(timer_.Interval/60000) min.</label>
 
 @if (ProductSubcases == null)
 {
@@ -38,7 +38,7 @@ else
 }
 
 @functions {
-    private Timer timer_ = new Timer(1000 * 60 * 2);
+    private Timer timer_ = new Timer(1000 * 60 * 30);
     private IEnumerable<string> ProductNames { get; set; } = new string[]{};
     
     private string productName_;

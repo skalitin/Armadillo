@@ -13,6 +13,7 @@ namespace Armadillo.Siebel
     {
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
+            var subcases = new List<Subcase>();
             var page = "";
             try
             {
@@ -24,7 +25,7 @@ namespace Armadillo.Siebel
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return new Subcase[]{};
+                return subcases;
             }
                         
             var htmlDoc = new HtmlDocument();
@@ -35,7 +36,6 @@ namespace Armadillo.Siebel
             var rowNodes = tableNode.SelectNodes("tr");
                         
             Console.WriteLine("Rows: {0}", rowNodes.Count);
-            var subcases = new List<Subcase>();
             int i = 0;
             foreach(var node in rowNodes)
             {
@@ -79,6 +79,8 @@ namespace Armadillo.Siebel
 
         private async Task<string> GetPageAsync(string url)
         {
+            Console.WriteLine("Loading report {0}", url);
+
             var uri = new Uri(url);
             var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
             var handler = new HttpClientHandler { Credentials = credentialsCache };

@@ -1,7 +1,11 @@
 ﻿
 #network-wrapper {
-    border: 1px dashed grey;
-    height: 700px;
+    /* border: 1px dashed grey;  */
     padding: 1em;
     margin: 1em 0;
+    position: absolute;
+    bottom: 0;
+    top: 100px;
+    right: 0px;
+    left: 0px;
 }
