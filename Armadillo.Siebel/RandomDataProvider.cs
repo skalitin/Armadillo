@@ -6,6 +6,7 @@ using Armadillo.Shared;
 
 namespace Armadillo.Siebel
 {
+
     public class RandomDataProvider : ISubcaseDataProdiver
     {
         public IEnumerable<string> GetProducts()
@@ -15,11 +16,6 @@ namespace Armadillo.Siebel
                 "Product One",
                 "Product Two"
             };
-        }
-
-        public IEnumerable<Subcase> GetSubcases(string product)
-        {
-            return GetSubcasesAsync(product).Result;
         }
 
         public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)

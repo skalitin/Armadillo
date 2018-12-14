@@ -58,11 +58,6 @@ namespace Armadillo.Siebel
             return subcases;
         }
 
-        public IEnumerable<Subcase> GetSubcases(string product)
-        {
-            return GetSubcasesAsync(product).Result;
-        }
-
         public IEnumerable<string> GetProducts()
         {
             return new[]
