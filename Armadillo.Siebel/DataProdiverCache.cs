@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Armadillo.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace Armadillo.Siebel
 {
@@ -20,13 +21,15 @@ namespace Armadillo.Siebel
     public class DataProdiverCache : ISubcaseDataProdiver
     {
         ISubcaseDataProdiver dataProdiver_;
-        TimeSpan cacheTime_;
+        TimeSpan refreshTimeout_;
         Dictionary<string, CachedSubcases> cache_;
+        ILogger logger_;
 
-        public DataProdiverCache(ISubcaseDataProdiver dataProvider, TimeSpan cacheTime)
+        public DataProdiverCache(ISubcaseDataProdiver dataProvider, ILogger logger, TimeSpan refreshTimeout)
         {
             dataProdiver_ = dataProvider;
-            cacheTime_ = cacheTime;
+            refreshTimeout_ = refreshTimeout;
+            logger_ = logger;
             cache_ = new Dictionary<string, CachedSubcases>();
         }
 
@@ -35,9 +38,29 @@ namespace Armadillo.Siebel
             return dataProdiver_.GetProducts();
         }
 
-        public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
+        public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
-            return dataProdiver_.GetSubcasesAsync(product);
+            var now = DateTime.Now;
+            CachedSubcases cachedSubcases = null;
+            if(cache_.TryGetValue(product, out cachedSubcases))
+            {
+                logger_.LogDebug("Cached subcases found for {product}", product);
+                if(now - cachedSubcases.RequestTime < refreshTimeout_)
+                {
+                    logger_.LogDebug("Return cached subcases for {product}", product);
+                    return cachedSubcases.Subcases;
+                }
+
+                logger_.LogDebug("Cache expired for {product}", product);
+            }
+
+            logger_.LogDebug("Updating cache for {product}...", product);
+            var subcases = await dataProdiver_.GetSubcasesAsync(product);
+
+            logger_.LogDebug("Cache updated for {product}", product);
+            cache_[product] = new CachedSubcases(subcases);
+
+            return subcases;
         }
     }
 }

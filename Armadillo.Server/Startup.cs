@@ -4,14 +4,23 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using System.Linq;
+using System;
 using System.Net.Mime;
 
 namespace Armadillo.Server
 {
     public class Startup
     {
+        private ILoggerFactory loggerFactory_;
+
+        public Startup(ILoggerFactory loggerFactory)
+        {
+            loggerFactory_ = loggerFactory;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -28,7 +37,11 @@ namespace Armadillo.Server
             });
 
             //services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
-            services.AddSingleton<ISubcaseDataProdiver, ReportServerDataProvider>();
+            //services.AddSingleton<ISubcaseDataProdiver, ReportServerDataProvider>();
+            
+            var logger = loggerFactory_.CreateLogger("DataProdiverCache");
+            var dataProviderCache = new DataProdiverCache(new RandomDataProvider(), logger, TimeSpan.FromMinutes(30));
+            services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
