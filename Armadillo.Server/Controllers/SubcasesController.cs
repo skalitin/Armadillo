@@ -24,20 +24,33 @@ namespace Armadillo.Server.Controllers
         [HttpGet("products")]
         public IEnumerable<string> Products()
         {   
-            logger_.LogInformation("Loading products");
+            logger_.LogInformation("Loading products...");
             return dataProdiver_.GetProducts();
         }
 
         [HttpGet("subcases")]
         public async Task<Product> Subcases(string product)
         {
-            logger_.LogInformation("Loading subcases for {0}", product);
-            var subcases = await dataProdiver_.GetSubcasesAsync(product);
-            return new Product()
+            logger_.LogInformation("Loading subcases for {0}...", product);
+            try
             {
-                Name = product,
-                Subcases = subcases.ToArray()
-            };
+                var subcases = await dataProdiver_.GetSubcasesAsync(product);
+                return new Product()
+                {
+                    Name = product,
+                    Subcases = subcases.ToArray()
+                };
+            }
+            catch(Exception error)
+            {
+                logger_.LogError(error, "Error loading subcases for {product}", product);
+                return new Product()
+                {
+                    Name = product,
+                    Error = error.Message,
+                    Subcases = new Subcase[] {}
+                };            
+            }
         }
     }
 }

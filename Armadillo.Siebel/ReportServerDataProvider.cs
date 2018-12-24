@@ -6,28 +6,28 @@ using System.Collections.Generic;
 using HtmlAgilityPack;
 using Armadillo.Shared;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace Armadillo.Siebel
 {
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {
+        ILogger logger_;
+
+        public ReportServerDataProvider(ILogger logger)
+        {
+            logger_ = logger;
+        }
+
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             var subcases = new List<Subcase>();
-            var page = "";
-            try
-            {
-                var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
-                var url = QueryHelpers.AddQueryString(template, "Products", product);
+ 
+            var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+            var url = QueryHelpers.AddQueryString(template, "Products", product);
 
-                page = await GetPageAsync(url);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return subcases;
-            }
-                        
+            var page = await GetPageAsync(url);
+
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(page);
 
@@ -35,7 +35,8 @@ namespace Armadillo.Siebel
             var tableNode = htmlBody.SelectSingleNode("//table[@class='a209']");
             var rowNodes = tableNode.SelectNodes("tr");
                         
-            Console.WriteLine("Rows: {0}", rowNodes.Count);
+            logger_.LogDebug("Rows: {Count}", rowNodes.Count);
+
             int i = 0;
             foreach(var node in rowNodes)
             {
@@ -73,7 +74,7 @@ namespace Armadillo.Siebel
 
         private async Task<string> GetPageAsync(string url)
         {
-            Console.WriteLine("Loading report {0}", url);
+            logger_.LogDebug("Loading report {url}", url);
 
             var uri = new Uri(url);
             var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };

@@ -36,11 +36,11 @@ namespace Armadillo.Server
                 });
             });
 
-            //services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
-            //services.AddSingleton<ISubcaseDataProdiver, ReportServerDataProvider>();
+//            services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
             
-            var logger = loggerFactory_.CreateLogger("DataProdiverCache");
-            var dataProviderCache = new DataProdiverCache(new RandomDataProvider(), logger, TimeSpan.FromMinutes(30));
+            var dataProviderCache = new DataProdiverCache(
+                new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
+                loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(30));
             services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
         }
 

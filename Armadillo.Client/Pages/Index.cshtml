@@ -33,8 +33,15 @@
 }
 else
 {
-    <h1>@ProductSubcases.Subcases.Length subcases</h1>
-    <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+    if(!String.IsNullOrEmpty(ProductSubcases.Error))
+    {
+        <p>Error loading subcases: @ProductSubcases.Error</p>
+    }
+    else
+    {
+        <h1>@ProductSubcases.Subcases.Length subcases</h1>
+        <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+    }
 }
 
 @functions {

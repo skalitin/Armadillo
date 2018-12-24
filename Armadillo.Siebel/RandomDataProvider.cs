@@ -31,6 +31,12 @@ namespace Armadillo.Siebel
                     "Update from Support",
                     "Assigned"
                 };
+                
+                if(rng.Next(0, 10) > 8)
+                {
+                    throw new ApplicationException("Sample error - something happened...");
+                }
+
                 return Enumerable.Range(1, rng.Next(10, 15)).Select(index => new Subcase
                 {
                     Id = String.Format("{0}-1", rng.Next(400000, 500000)),
