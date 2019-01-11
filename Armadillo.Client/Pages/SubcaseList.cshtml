@@ -1,0 +1,41 @@
+﻿@using Armadillo.Shared
+
+@if (Product != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                @if(ShowCustomers) { <th>Customer</th>  }
+                @if(ShowOwners) {  <th>Owner</th> }
+                <th>Level</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+         <tbody>
+            @foreach (var subcase in Product.Subcases)
+            {
+                <tr>
+                    <td>@subcase.Id</td>
+                    <td>@subcase.Title</td>
+                    @if(ShowCustomers) { <td>@subcase.Customer</td> }
+                    @if(ShowOwners) { <td>@subcase.Owner</td> }
+                    <td>@subcase.Level</td>
+                    <td>@subcase.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@functions {
+    [Parameter]
+    private Product Product { get; set; }
+
+    [Parameter]
+    private bool ShowCustomers { get; set; }
+    
+    [Parameter]
+    private bool ShowOwners { get; set; }
+}

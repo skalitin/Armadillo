@@ -31,10 +31,13 @@ namespace Armadillo.Server.Controllers
         [HttpGet("subcases")]
         public async Task<Product> Subcases(string product)
         {
-            logger_.LogInformation("Loading subcases for {0}...", product);
+            logger_.LogInformation("Loading subcases for {product}...", product);
             try
             {
-                var subcases = await dataProdiver_.GetSubcasesAsync(product);
+                var result = await dataProdiver_.GetSubcasesAsync(product);
+                var subcases = result.ToArray();
+                
+                logger_.LogInformation("Loaded {0} subcases", subcases.Length);
                 return new Product()
                 {
                     Name = product,

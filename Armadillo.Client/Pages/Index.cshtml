@@ -24,6 +24,10 @@
 <label for="show-owners">Show owners</label>
 
 <span>&nbsp;&nbsp;</span>
+<input type="checkbox" bind="@ShowGraph" id="show-graph"/>
+<label for="show-graph">Graph</label>
+
+<span>&nbsp;&nbsp;</span>
 <input type="checkbox" bind="@Autorefresh" id="autorefresh"/>
 <label for="autorefresh">Auto refresh every @(timer_.Interval/60000) min.</label>
 
@@ -39,8 +43,15 @@ else
     }
     else
     {
-        <h1>@ProductSubcases.Subcases.Length subcases</h1>
-        <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+        <h1>@ProductSubcases.Subcases.Length subcases for @ProductSubcases.Name</h1>
+        if(ShowGraph) 
+        {
+            <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+        }
+        else
+        {
+            <SubcaseList Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+        }
     }
 }
 
@@ -76,6 +87,7 @@ else
         }
     }
 
+    private bool ShowGraph { get; set; } = true;
     private bool ShowCustomers { get; set; } = true;
     private bool ShowOwners { get; set; } = true;
     private Product ProductSubcases { get; set; }

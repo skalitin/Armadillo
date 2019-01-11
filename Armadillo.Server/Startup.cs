@@ -36,12 +36,12 @@ namespace Armadillo.Server
                 });
             });
 
-//            services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
-            
-            var dataProviderCache = new DataProdiverCache(
-                new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
-                loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(30));
-            services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
+            //var dataProviderCache = new DataProdiverCache(
+            //    new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
+            //    loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(30));
+            //services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
+
+            services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
