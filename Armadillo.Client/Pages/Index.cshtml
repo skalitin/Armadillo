@@ -44,14 +44,16 @@ else
     else
     {
         <h1>@ProductSubcases.Subcases.Length subcases for @ProductSubcases.Name</h1>
-        if(ShowGraph) 
-        {
-            <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
-        }
-        else
-        {
-            <SubcaseList Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
-        }
+        <div>
+            @if(ShowGraph) 
+            {
+                <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+            }
+            else
+            {
+                <SubcaseList Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
+            }
+        </div>
     }
 }
 
