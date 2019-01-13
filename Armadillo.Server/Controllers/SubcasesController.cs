@@ -34,6 +34,7 @@ namespace Armadillo.Server.Controllers
             logger_.LogInformation("Loading subcases for {product}...", product);
             try
             {
+                var reportLink = dataProdiver_.GetReportLink(product);
                 var result = await dataProdiver_.GetSubcasesAsync(product);
                 var subcases = result.ToArray();
                 
@@ -41,7 +42,8 @@ namespace Armadillo.Server.Controllers
                 return new Product()
                 {
                     Name = product,
-                    Subcases = subcases.ToArray()
+                    Subcases = subcases.ToArray(),
+                    ReportLink = reportLink
                 };
             }
             catch(Exception error)

@@ -7,6 +7,7 @@ namespace Armadillo.Shared
         public string Name { get; set;}
         public Subcase[] Subcases { get; set; }
         public string Error { get; set; }
+        public string ReportLink { get; set; }
 
         public override string ToString()
         {

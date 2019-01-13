@@ -9,6 +9,7 @@ namespace Armadillo.Siebel
     public interface ISubcaseDataProdiver
     {
         IEnumerable<string> GetProducts();
+        string GetReportLink(string product);
         Task<IEnumerable<Subcase>> GetSubcasesAsync(string product);
     }
 }

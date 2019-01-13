@@ -38,6 +38,11 @@ namespace Armadillo.Siebel
             return dataProdiver_.GetProducts();
         }
 
+        public string GetReportLink(string product)
+        {
+            return dataProdiver_.GetReportLink(product);
+        }
+
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             var now = DateTime.Now;

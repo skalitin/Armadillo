@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Armadillo.Shared;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Armadillo.Siebel
 {
@@ -16,6 +17,11 @@ namespace Armadillo.Siebel
                 "Product One",
                 "Product Two"
             };
+        }
+        public string GetReportLink(string product)
+        {
+            var template = @"https://www.google.com/search";
+            return QueryHelpers.AddQueryString(template, "q", product);
         }
 
         public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)

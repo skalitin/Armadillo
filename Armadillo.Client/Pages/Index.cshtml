@@ -36,13 +36,16 @@
     <h1>Loading...</h1>
 }
 else
-{
+{    
     if(!String.IsNullOrEmpty(ProductSubcases.Error))
     {
         <p>Error loading subcases: @ProductSubcases.Error</p>
     }
     else
     {
+        <span>&nbsp;&nbsp;</span>
+        <a target="_blank" href="@ProductSubcases.ReportLink">Detailed report</a>
+
         <h1>@ProductSubcases.Subcases.Length subcases for @ProductSubcases.Name</h1>
         <div>
             @if(ShowGraph) 

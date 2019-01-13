@@ -21,11 +21,7 @@ namespace Armadillo.Siebel
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
-            var subcases = new List<Subcase>();
- 
-            var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
-            var url = QueryHelpers.AddQueryString(template, "Products", product);
-
+            var url = GetReportLink(product);
             var page = await GetPageAsync(url);
 
             var htmlDoc = new HtmlDocument();
@@ -37,6 +33,7 @@ namespace Armadillo.Siebel
                         
             logger_.LogDebug("Rows: {Count}", rowNodes.Count);
 
+            var subcases = new List<Subcase>();
             int i = 0;
             foreach(var node in rowNodes)
             {
@@ -57,6 +54,11 @@ namespace Armadillo.Siebel
             }
 
             return subcases;
+        }
+        public string GetReportLink(string product)
+        {
+            var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+            return QueryHelpers.AddQueryString(template, "Products", product);
         }
 
         public IEnumerable<string> GetProducts()
