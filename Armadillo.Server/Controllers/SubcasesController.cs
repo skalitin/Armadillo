@@ -32,9 +32,9 @@ namespace Armadillo.Server.Controllers
         public async Task<Product> Subcases(string product)
         {
             logger_.LogInformation("Loading subcases for {product}...", product);
+            var reportLink = dataProdiver_.GetReportLink(product);
             try
             {
-                var reportLink = dataProdiver_.GetReportLink(product);
                 var result = await dataProdiver_.GetSubcasesAsync(product);
                 var subcases = result.ToArray();
                 
@@ -53,7 +53,8 @@ namespace Armadillo.Server.Controllers
                 {
                     Name = product,
                     Error = error.Message,
-                    Subcases = new Subcase[] {}
+                    Subcases = new Subcase[] {},
+                    ReportLink = reportLink
                 };            
             }
         }
