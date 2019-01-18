@@ -12,6 +12,12 @@ namespace Armadillo.Siebel.Tests
             return new string[]{};
         }
 
+
+        public string GetReportLink(string product)
+        {
+            return "";
+        }
+
         public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             return Task<IEnumerable<Subcase>>.Run(() =>
