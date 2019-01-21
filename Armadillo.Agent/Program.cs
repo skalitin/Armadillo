@@ -10,6 +10,12 @@ using Armadillo.Shared;
 
 namespace Armadillo.Agent
 {
+    public class Subcase2
+    {
+        public string id { get; set; }
+        public string title { get; set; }
+    }
+
     class Program
     {
         public static IConfigurationRoot Configuration { get; set; }
@@ -22,9 +28,9 @@ namespace Armadillo.Agent
             Configuration = builder.Build();
             EndpointUri = Configuration["CosmosDB:EndpointUri"];
             PrimaryKey = Configuration["CosmosDB:PrimaryKey"];
-            Console.WriteLine("Uri {0}, key {1}", EndpointUri, PrimaryKey);
-            
-            return ;
+
+            // Console.WriteLine("Uri {0}, key {1}", EndpointUri, PrimaryKey);
+            // return ;
 
             try
             {
@@ -61,23 +67,23 @@ namespace Armadillo.Agent
 
             var databaseName = "SubcaseMonitor";
             var collectionName = "Products";
-            var subcase = new Subcase()
+            var subcase = new Subcase2()
             {
-                Id = "121233",
-                Title = "aaa"
+                id = "123456-1",
+                title = "aaa"
             };
 
             try
             {
-                await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, subcase.Id));
-                Console.WriteLine("Found {0}", subcase.Id);
+                await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, subcase.id));
+                Console.WriteLine("Found {0}", subcase.id);
             }
             catch (DocumentClientException de)
             {
                 if (de.StatusCode == HttpStatusCode.NotFound)
                 {
                     await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), subcase);
-                    Console.WriteLine("Created subcase {0}", subcase.Id);
+                    Console.WriteLine("Created subcase {0}", subcase.id);
                 }
                 else
                 {
