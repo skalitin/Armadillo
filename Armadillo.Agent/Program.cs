@@ -10,12 +10,6 @@ using Armadillo.Shared;
 
 namespace Armadillo.Agent
 {
-    public class Subcase2
-    {
-        public string id { get; set; }
-        public string title { get; set; }
-    }
-
     class Program
     {
         public static IConfigurationRoot Configuration { get; set; }
@@ -67,23 +61,23 @@ namespace Armadillo.Agent
 
             var databaseName = "SubcaseMonitor";
             var collectionName = "Products";
-            var subcase = new Subcase2()
+            var subcase = new Subcase()
             {
-                id = "123456-1",
-                title = "aaa"
+                Id = "123456-1",
+                Title = "aaa"
             };
 
             try
             {
-                await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, subcase.id));
-                Console.WriteLine("Found {0}", subcase.id);
+                await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, subcase.Id));
+                Console.WriteLine("Found {0}", subcase.Id);
             }
             catch (DocumentClientException de)
             {
                 if (de.StatusCode == HttpStatusCode.NotFound)
                 {
                     await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), subcase);
-                    Console.WriteLine("Created subcase {0}", subcase.id);
+                    Console.WriteLine("Created subcase {0}", subcase.Id);
                 }
                 else
                 {

@@ -1,12 +1,20 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Armadillo.Shared
 {
     public class Product
     {
+        [JsonProperty("name")]
         public string Name { get; set;}
+        
+        [JsonProperty("subcases")]
         public Subcase[] Subcases { get; set; }
+        
+        [JsonProperty("error")]
         public string Error { get; set; }
+        
+        [JsonProperty("reportlink")]
         public string ReportLink { get; set; }
 
         public override string ToString()
