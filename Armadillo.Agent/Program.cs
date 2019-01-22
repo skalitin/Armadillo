@@ -7,29 +7,28 @@ using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Armadillo.Shared;
+using Armadillo.Siebel;
 
 namespace Armadillo.Agent
 {
     class Program
     {
-        public static IConfigurationRoot Configuration { get; set; }
-        private static string EndpointUri = "";
-        private static string PrimaryKey = "";
-
         static void Main(string[] args)
         {
             var builder = new ConfigurationBuilder().AddUserSecrets("28e6f711-a4c4-4cef-9e37-50ebfee35f91");
-            Configuration = builder.Build();
-            EndpointUri = Configuration["CosmosDB:EndpointUri"];
-            PrimaryKey = Configuration["CosmosDB:PrimaryKey"];
+            var configuration = builder.Build();
+            var endpointUri = configuration["CosmosDB:EndpointUri"];
+            var primaryKey = configuration["CosmosDB:PrimaryKey"];
 
-            // Console.WriteLine("Uri {0}, key {1}", EndpointUri, PrimaryKey);
-            // return ;
+            Console.WriteLine("Database endpoint {0}, key {1}", endpointUri, primaryKey);
+            var documentClient = new DocumentClient(new Uri(endpointUri), primaryKey);
+
+            var dataProvider  = new RandomDataProvider();
 
             try
             {
-                var p = new Program();
-                p.Spike().Wait();
+                var uploader = new Uploader(dataProvider, documentClient);
+                uploader.UpdateAsync().Wait();
             }
             catch (DocumentClientException de)
             {
@@ -41,50 +40,45 @@ namespace Armadillo.Agent
                 Exception baseException = e.GetBaseException();
                 Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
             }
-            finally
-            {
-                Console.WriteLine("End of demo, press any key to exit.");
-                Console.ReadKey();
-            }
         }
 
-        private async Task Spike()
-        {
-            var client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
-            await client.CreateDatabaseIfNotExistsAsync(new Database { Id = "SubcaseMonitor" });
-            Console.WriteLine("Done 1");
+        // private async Task Spike()
+        // {
+        //     var client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
+        //     await client.CreateDatabaseIfNotExistsAsync(new Database { Id = "SubcaseMonitor" });
+        //     Console.WriteLine("Done 1");
 
-            await client.CreateDocumentCollectionIfNotExistsAsync(
-                UriFactory.CreateDatabaseUri("SubcaseMonitor"),
-                new DocumentCollection { Id = "Products" });
-            Console.WriteLine("Done 2");
+        //     await client.CreateDocumentCollectionIfNotExistsAsync(
+        //         UriFactory.CreateDatabaseUri("SubcaseMonitor"),
+        //         new DocumentCollection { Id = "Products" });
+        //     Console.WriteLine("Done 2");
 
-            var databaseName = "SubcaseMonitor";
-            var collectionName = "Products";
-            var subcase = new Subcase()
-            {
-                Id = "123456-1",
-                Title = "aaa"
-            };
+        //     var databaseName = "SubcaseMonitor";
+        //     var collectionName = "Products";
+        //     var subcase = new Subcase()
+        //     {
+        //         Id = "123456-1",
+        //         Title = "aaa"
+        //     };
 
-            try
-            {
-                await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, subcase.Id));
-                Console.WriteLine("Found {0}", subcase.Id);
-            }
-            catch (DocumentClientException de)
-            {
-                if (de.StatusCode == HttpStatusCode.NotFound)
-                {
-                    await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), subcase);
-                    Console.WriteLine("Created subcase {0}", subcase.Id);
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //     try
+        //     {
+        //         await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, subcase.Id));
+        //         Console.WriteLine("Found {0}", subcase.Id);
+        //     }
+        //     catch (DocumentClientException de)
+        //     {
+        //         if (de.StatusCode == HttpStatusCode.NotFound)
+        //         {
+        //             await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), subcase);
+        //             Console.WriteLine("Created subcase {0}", subcase.Id);
+        //         }
+        //         else
+        //         {
+        //             throw;
+        //         }
+        //     }
 
-        }
+        // }
     }
 }
