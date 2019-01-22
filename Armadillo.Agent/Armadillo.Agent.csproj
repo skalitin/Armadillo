@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Armadillo.Shared\Armadillo.Shared.csproj" />
+    <ProjectReference Include="..\Armadillo.Siebel\Armadillo.Siebel.csproj" />
   </ItemGroup>
 
 </Project>
