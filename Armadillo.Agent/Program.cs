@@ -27,8 +27,15 @@ namespace Armadillo.Agent
 
             try
             {
-                var uploader = new Uploader(dataProvider, documentClient);
-                uploader.UpdateAsync().Wait();
+                // var uploader = new Uploader(dataProvider, documentClient);
+                // uploader.UpdateAsync().Wait();
+
+                var cosmosDataProvider = new CosmosDataProvider(documentClient);
+                var subcases = cosmosDataProvider.GetSubcasesAsync("ignored").Result;
+                foreach(var subcase in subcases)
+                {
+                    Console.WriteLine($"Subcase {subcase.Id} {subcase.Title}");
+                }
             }
             catch (DocumentClientException de)
             {
@@ -41,44 +48,5 @@ namespace Armadillo.Agent
                 Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
             }
         }
-
-        // private async Task Spike()
-        // {
-        //     var client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
-        //     await client.CreateDatabaseIfNotExistsAsync(new Database { Id = "SubcaseMonitor" });
-        //     Console.WriteLine("Done 1");
-
-        //     await client.CreateDocumentCollectionIfNotExistsAsync(
-        //         UriFactory.CreateDatabaseUri("SubcaseMonitor"),
-        //         new DocumentCollection { Id = "Products" });
-        //     Console.WriteLine("Done 2");
-
-        //     var databaseName = "SubcaseMonitor";
-        //     var collectionName = "Products";
-        //     var subcase = new Subcase()
-        //     {
-        //         Id = "123456-1",
-        //         Title = "aaa"
-        //     };
-
-        //     try
-        //     {
-        //         await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, subcase.Id));
-        //         Console.WriteLine("Found {0}", subcase.Id);
-        //     }
-        //     catch (DocumentClientException de)
-        //     {
-        //         if (de.StatusCode == HttpStatusCode.NotFound)
-        //         {
-        //             await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), subcase);
-        //             Console.WriteLine("Created subcase {0}", subcase.Id);
-        //         }
-        //         else
-        //         {
-        //             throw;
-        //         }
-        //     }
-
-        // }
     }
 }
