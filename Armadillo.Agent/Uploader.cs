@@ -14,8 +14,8 @@ namespace Armadillo.Agent
         private ISubcaseDataProdiver dataProdiver_;
         private DocumentClient documentClient_;
 
-        private readonly string DatabaseId = "SubcaseMonitor";
-        private readonly string SubcasesCollection = "Subcases";
+        private readonly string DatabaseName = "SubcaseMonitor";
+        private readonly string CollectionName = "Subcases";
 
         public Uploader(ISubcaseDataProdiver dataProdiver, DocumentClient documentClient)
         {
@@ -27,10 +27,10 @@ namespace Armadillo.Agent
 
         public async Task InitializeAsync()
         {
-            await documentClient_.CreateDatabaseIfNotExistsAsync(new Database { Id = DatabaseId });
+            await documentClient_.CreateDatabaseIfNotExistsAsync(new Database { Id = DatabaseName });
             await documentClient_.CreateDocumentCollectionIfNotExistsAsync(
-                UriFactory.CreateDatabaseUri(DatabaseId),
-                new DocumentCollection { Id = SubcasesCollection });
+                UriFactory.CreateDatabaseUri(DatabaseName),
+                new DocumentCollection { Id = CollectionName });
         }
 
         public async Task UpdateAsync()
@@ -45,14 +45,14 @@ namespace Armadillo.Agent
                     Console.WriteLine($"Register {subcase.Id} {subcase.Title}");
                     try
                     {
-                        await documentClient_.ReadDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, SubcasesCollection, subcase.Id));
+                        await documentClient_.ReadDocumentAsync(UriFactory.CreateDocumentUri(DatabaseName, CollectionName, subcase.Id));
                         Console.WriteLine($"Found {subcase.Id}");
                     }
                     catch (DocumentClientException ex)
                     {
                         if (ex.StatusCode == HttpStatusCode.NotFound)
                         {
-                            await documentClient_.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseId, SubcasesCollection), subcase);
+                            await documentClient_.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), subcase);
                             Console.WriteLine($"Created {subcase.Id}");
                         }
                         else
