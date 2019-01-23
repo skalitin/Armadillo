@@ -74,8 +74,12 @@ namespace Armadillo.Server
                 
                 logger.LogDebug($"Database endpoint {endpointUri}");
                 var documentClient = new DocumentClient(new Uri(endpointUri), primaryKey);
-                var cosmosDataProvider = new CosmosDataProvider(documentClient);
-                services.AddSingleton<ISubcaseDataProdiver>(cosmosDataProvider);
+
+                var dataProviderCache = new DataProdiverCache(
+                    new CosmosDataProvider(documentClient),
+                    loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(1));
+
+                services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
             }
         }
 

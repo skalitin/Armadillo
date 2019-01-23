@@ -8,6 +8,10 @@ using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Armadillo.Shared;
 using Armadillo.Siebel;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace Armadillo.Agent
 {
@@ -15,38 +19,21 @@ namespace Armadillo.Agent
     {
         static void Main(string[] args)
         {
-            var builder = new ConfigurationBuilder().AddUserSecrets("28e6f711-a4c4-4cef-9e37-50ebfee35f91");
-            var configuration = builder.Build();
-            var endpointUri = configuration["CosmosDB:EndpointUri"];
-            var primaryKey = configuration["CosmosDB:PrimaryKey"];
-
-            Console.WriteLine("Database endpoint {0}, key {1}", endpointUri, primaryKey);
-            var documentClient = new DocumentClient(new Uri(endpointUri), primaryKey);
-
-            var dataProvider  = new RandomDataProvider();
-
-            try
-            {
-                // var uploader = new Uploader(dataProvider, documentClient);
-                // uploader.UpdateAsync().Wait();
-
-                var cosmosDataProvider = new CosmosDataProvider(documentClient);
-                var subcases = cosmosDataProvider.GetSubcasesAsync("ignored").Result;
-                foreach(var subcase in subcases)
-                {
-                    Console.WriteLine($"Subcase {subcase.Id} {subcase.Title}");
-                }
-            }
-            catch (DocumentClientException de)
-            {
-                Exception baseException = de.GetBaseException();
-                Console.WriteLine("{0} error occurred: {1}, Message: {2}", de.StatusCode, de.Message, baseException.Message);
-            }
-            catch (Exception e)
-            {
-                Exception baseException = e.GetBaseException();
-                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
-            }
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            var serviceProvider = services.BuildServiceProvider();
+            var application = serviceProvider.GetService<Application>();
+            Task.Run(() => application.Run()).Wait();
         }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddLogging(builder => { 
+                builder.AddDebug();
+                builder.AddConsole(); 
+            });
+
+            services.AddTransient<Application>();
+        }   
     }
 }

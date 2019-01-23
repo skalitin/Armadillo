@@ -6,6 +6,7 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Armadillo.Shared;
 using Armadillo.Siebel;
+using Microsoft.Extensions.Logging;
 
 namespace Armadillo.Agent
 {
@@ -13,15 +14,17 @@ namespace Armadillo.Agent
     {
         private ISubcaseDataProdiver dataProdiver_;
         private DocumentClient documentClient_;
+        private ILogger logger_;
 
         private readonly string DatabaseName = "SubcaseMonitor";
         private readonly string CollectionName = "Subcases";
 
-        public Uploader(ISubcaseDataProdiver dataProdiver, DocumentClient documentClient)
+        public Uploader(ISubcaseDataProdiver dataProdiver, DocumentClient documentClient, ILogger logger)
         {
             dataProdiver_ = dataProdiver;
             documentClient_ = documentClient;
-           
+            logger_ = logger;
+            
             InitializeAsync().Wait();
         }
 
@@ -38,22 +41,22 @@ namespace Armadillo.Agent
             var products = dataProdiver_.GetProducts();
             foreach(var product in products)
             {
-                Console.WriteLine($"Register {product}");
+                logger_.LogInformation($"Register {product}");
                 var subcases = await dataProdiver_.GetSubcasesAsync(product);
                 foreach(var subcase in subcases)
                 {
-                    Console.WriteLine($"Register {subcase.Id} {subcase.Title}");
+                    logger_.LogInformation($"Register {subcase.Id} {subcase.Title}");
                     try
                     {
                         await documentClient_.ReadDocumentAsync(UriFactory.CreateDocumentUri(DatabaseName, CollectionName, subcase.Id));
-                        Console.WriteLine($"Found {subcase.Id}");
+                        logger_.LogInformation($"Found {subcase.Id}");
                     }
                     catch (DocumentClientException ex)
                     {
                         if (ex.StatusCode == HttpStatusCode.NotFound)
                         {
                             await documentClient_.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), subcase);
-                            Console.WriteLine($"Created {subcase.Id}");
+                            logger_.LogInformation($"Created {subcase.Id}");
                         }
                         else
                         {
