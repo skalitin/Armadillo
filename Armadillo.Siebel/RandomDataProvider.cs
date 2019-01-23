@@ -50,7 +50,8 @@ namespace Armadillo.Siebel
                     Level = "" + rng.Next(1, 4),
                     Customer = "Customer " + rng.Next(1, 5),
                     Owner = "Owner " + rng.Next(1, 7),
-                    Status = statuses[rng.Next(0, statuses.Length)]
+                    Status = statuses[rng.Next(0, statuses.Length)],
+                    Loaded = DateTime.UtcNow
                 });
             });
         }

@@ -47,7 +47,8 @@ namespace Armadillo.Siebel
                     Level = cells[3].InnerText.Substring("Level ".Length),
                     Owner = cells[4].InnerText,
                     Status = cells[8].InnerText,
-                    Customer = cells[9].InnerText
+                    Customer = cells[9].InnerText,
+                    Loaded = DateTime.UtcNow
                 };
                 
                 subcases.Add(subcase);

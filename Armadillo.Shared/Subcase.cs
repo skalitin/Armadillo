@@ -24,5 +24,8 @@ namespace Armadillo.Shared
         
         [JsonProperty("level")]
         public string Level { get; set; }
+        
+        [JsonProperty("loaded")]
+        public DateTime Loaded { get; set; }
     }
 }
