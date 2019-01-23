@@ -40,19 +40,43 @@ namespace Armadillo.Server
                 });
             });
 
-            // var dataProviderCache = new DataProdiverCache(
-            //    new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
-            //    loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(30));
-            // services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
+            AddDataProvider(services);
+        }
 
-            //services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
-            
-            var endpointUri = configuration_["CosmosDB:EndpointUri"];
-            var primaryKey = configuration_["CosmosDB:PrimaryKey"];
-            Console.WriteLine("Database endpoint {0}, key {1}", endpointUri, primaryKey);
-            var documentClient = new DocumentClient(new Uri(endpointUri), primaryKey);
-            var cosmosDataProvider = new CosmosDataProvider(documentClient);
-            services.AddSingleton<ISubcaseDataProdiver>(cosmosDataProvider);
+        private void AddDataProvider(IServiceCollection services)
+        {
+            var logger = loggerFactory_.CreateLogger("Startup");
+
+            var dataProviderName = configuration_["SubcaseDataProvider"];
+            logger.LogInformation($"Data provider: {dataProviderName}");
+
+            if(String.Equals("Random", dataProviderName, StringComparison.OrdinalIgnoreCase))
+            {
+                logger.LogInformation("Using random data provider");
+                services.AddSingleton<ISubcaseDataProdiver, RandomDataProvider>();
+            }
+            else if(String.Equals("Report", dataProviderName, StringComparison.OrdinalIgnoreCase))
+            {
+                logger.LogInformation("Using SSRS report data provider");
+
+                var dataProviderCache = new DataProdiverCache(
+                    new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
+                    loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(30));
+                
+                services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
+            }
+            else if(String.Equals("Cosmos", dataProviderName, StringComparison.OrdinalIgnoreCase))
+            {
+                logger.LogInformation("Using CosmosDB data provider");
+
+                var endpointUri = configuration_["CosmosDB:EndpointUri"];
+                var primaryKey = configuration_["CosmosDB:PrimaryKey"];
+                
+                logger.LogDebug($"Database endpoint {endpointUri}");
+                var documentClient = new DocumentClient(new Uri(endpointUri), primaryKey);
+                var cosmosDataProvider = new CosmosDataProvider(documentClient);
+                services.AddSingleton<ISubcaseDataProdiver>(cosmosDataProvider);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
