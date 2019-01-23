@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Armadillo.Siebel;
@@ -10,7 +11,8 @@ namespace Armadillo.Agent
     public class Application
     {
         ILoggerFactory loggerFactory_;
-        ILogger logger_; 
+        ILogger logger_;
+        Timer timer_ = new Timer(1000 * 60 * 5);
         
         public Application(ILoggerFactory loggerFactory)
         {
@@ -18,7 +20,7 @@ namespace Armadillo.Agent
             logger_ = loggerFactory_.CreateLogger("Application");
         }
 
-        public void Run()
+        public void StartMonitoring()
         {
             try
             {
@@ -49,13 +51,23 @@ namespace Armadillo.Agent
                 var endpointUri = configuration["CosmosDB:EndpointUri"];
                 var primaryKey = configuration["CosmosDB:PrimaryKey"];
 
-                logger_.LogInformation("Database endpoint {0}", endpointUri);
+                logger_.LogInformation("Using database endpoint {0}", endpointUri);
                 var documentClient = new DocumentClient(new Uri(endpointUri), primaryKey);
 
                 var uploader = new Uploader(dataProvider, documentClient, loggerFactory_.CreateLogger("Uploader"));
-                uploader.UpdateAsync().Wait();
 
-                logger_.LogInformation("Update completed");
+                timer_.Elapsed += (sender, e) =>
+                {
+                    logger_.LogInformation("Update started...");
+
+                    uploader.UpdateAsync().Wait();
+                    logger_.LogInformation("Update completed");
+                };
+
+                timer_.AutoReset = true;
+                timer_.Enabled = true;
+
+                logger_.LogInformation($"Periodic update started at every {timer_.Interval/60000} min.");
 
                 // await TestReadSubcasesAsync();
             }

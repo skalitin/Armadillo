@@ -16,9 +16,9 @@ namespace Armadillo.Agent
             var serviceProvider = services.BuildServiceProvider();
 
             var application = serviceProvider.GetService<Application>();
-            application.Run();
+            application.StartMonitoring();
 
-            Thread.Sleep(5000);
+            Console.ReadKey();
         }
 
         private static void ConfigureServices(IServiceCollection services)
