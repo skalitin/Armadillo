@@ -9,7 +9,7 @@ namespace Armadillo.Siebel
 {
 
     public class RandomDataProvider : ISubcaseDataProdiver
-    {
+    {        
         public IEnumerable<string> GetProducts()
         {
             return new[]
@@ -50,8 +50,7 @@ namespace Armadillo.Siebel
                     Level = "" + rng.Next(1, 4),
                     Customer = "Customer " + rng.Next(1, 5),
                     Owner = "Owner " + rng.Next(1, 7),
-                    Status = statuses[rng.Next(0, statuses.Length)],
-                    Product = product
+                    Status = statuses[rng.Next(0, statuses.Length)]
                 });
             });
         }

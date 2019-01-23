@@ -24,8 +24,5 @@ namespace Armadillo.Shared
         
         [JsonProperty("level")]
         public string Level { get; set; }
-        
-        [JsonProperty("product")]
-        public string Product { get; set; }
     }
 }

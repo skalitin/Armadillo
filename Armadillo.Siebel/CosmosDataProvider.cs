@@ -3,43 +3,61 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Armadillo.Shared;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Extensions.Logging;
 
 namespace Armadillo.Siebel
 {
     public class CosmosDataProvider : ISubcaseDataProdiver
     {
+        ILogger logger_;
         private DocumentClient documentClient_;
         private readonly string DatabaseName = "SubcaseMonitor";
-        private readonly string CollectionName = "Subcases";
+        private readonly string CollectionName = "Products";
 
-        public CosmosDataProvider(DocumentClient documentClient)
+        public CosmosDataProvider(DocumentClient documentClient, ILogger logger)
         {
             documentClient_ = documentClient;
+            logger_ = logger;
         }
 
         public IEnumerable<string> GetProducts()
         {
-            return new[]
-            {
-                "Product One",
-                "Product Two"
-            };
-        }
-        public string GetReportLink(string product)
-        {
-            var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
-            return QueryHelpers.AddQueryString(template, "Products", product);
+            logger_.LogInformation($"Get products");
+
+            var products = GetProductsAsync().Result;
+            return products.Select(each => each.Name);
         }
 
-        public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
+        public string GetReportLink(string product)
         {
-            return Task<IEnumerable<Subcase>>.Run(() => {
-                var query = documentClient_.CreateDocumentQuery<Subcase>(
+            logger_.LogInformation($"Get report link");
+
+            var products = GetProductsAsync().Result;
+            return products.First(each => each.Name == product).ReportLink;
+        }
+
+        public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string productName)
+        {
+            logger_.LogInformation($"Loading subcases for {productName}");
+
+            var products = (await GetProductsAsync()).ToArray();
+            logger_.LogInformation($"Loaded products: {products.Count()}");
+
+            var product = products.First(each => each.Name == productName);
+            logger_.LogInformation($"Found product: {product.Name}");
+
+            return product.Subcases;
+        }
+
+        public Task<IEnumerable<Product>> GetProductsAsync()
+        {
+            logger_.LogInformation($"Loading products");
+
+            return Task<IEnumerable<Product>>.Run(() => {
+                var query = documentClient_.CreateDocumentQuery<Product>(
                     UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), new FeedOptions { MaxItemCount = -1 });
-                return query as IEnumerable<Subcase>;
+                return query as IEnumerable<Product>;
             });
         }
     }

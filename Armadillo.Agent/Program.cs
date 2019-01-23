@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Net;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Configuration;
-using Armadillo.Shared;
-using Armadillo.Siebel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace Armadillo.Agent
 {

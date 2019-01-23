@@ -76,7 +76,7 @@ namespace Armadillo.Server
                 var documentClient = new DocumentClient(new Uri(endpointUri), primaryKey);
 
                 var dataProviderCache = new DataProdiverCache(
-                    new CosmosDataProvider(documentClient),
+                    new CosmosDataProvider(documentClient, loggerFactory_.CreateLogger("CosmosDataProvider")),
                     loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(1));
 
                 services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);

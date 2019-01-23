@@ -5,6 +5,9 @@ namespace Armadillo.Shared
 {
     public class Product
     {
+        [JsonProperty("id")]
+        public string Id { get; set;}
+
         [JsonProperty("name")]
         public string Name { get; set;}
         
