@@ -48,7 +48,7 @@ namespace Armadillo.Server.Controllers
             }
             catch(Exception error)
             {
-                logger_.LogError(error, "Error loading subcases for {product}", product);
+                logger_.LogError(error, $"Error loading subcases for {product}");
                 return new Product()
                 {
                     Name = product,

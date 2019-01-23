@@ -61,7 +61,7 @@ namespace Armadillo.Server
 
                 var dataProviderCache = new DataProdiverCache(
                     new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
-                    loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(30));
+                    loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(5));
                 
                 services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
             }

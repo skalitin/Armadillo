@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +14,11 @@ namespace Armadillo.Agent
             var services = new ServiceCollection();
             ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
+
             var application = serviceProvider.GetService<Application>();
-            Task.Run(() => application.Run()).Wait();
+            application.Run();
+
+            Thread.Sleep(5000);
         }
 
         private static void ConfigureServices(IServiceCollection services)

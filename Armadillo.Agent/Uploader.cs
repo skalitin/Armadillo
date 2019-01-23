@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 using System.Net;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -43,38 +45,65 @@ namespace Armadillo.Agent
             var productNames = dataProdiver_.GetProducts();
             foreach(var productName in productNames)
             {
-                var subcases = await dataProdiver_.GetSubcasesAsync(productName);
-                var product = new Product
+                try
                 {
-                    Id = productName.GetHashCode().ToString(),
-                    Name = productName,
-                    ReportLink = dataProdiver_.GetReportLink(productName),
-                    Subcases = subcases.ToArray()
-                };
-                await RegisterProductAsync(product);
-            }
-       }
+                    logger_.LogInformation($"Getting subcases for {productName}...");
+                    var subcases = (await dataProdiver_.GetSubcasesAsync(productName)).ToArray();
 
-       private async Task RegisterProductAsync(Product product)
-       {
-            logger_.LogInformation($"Register product {product.Name}");
+                    logger_.LogInformation($"{subcases.Count()} subcases for {productName}...");
+                    var product = new Product
+                    {
+                        Id = GetHash(productName),
+                        Name = productName,
+                        ReportLink = dataProdiver_.GetReportLink(productName),
+                        Subcases = subcases.ToArray()
+                    };
+                    await RegisterProductAsync(product);
+                    logger_.LogInformation($"Update complete for {productName}");
+                }
+                catch(Exception error)
+                {
+                    logger_.LogError(error, $"Error on updating subcases for {productName}");
+                }
+            }
+        }
+
+        private async Task RegisterProductAsync(Product product)
+        {
+            logger_.LogInformation($"Register {product.Name} and its subcases");
             try
             {
-                await documentClient_.ReadDocumentAsync(UriFactory.CreateDocumentUri(DatabaseName, CollectionName, product.Id));
+                var uri = UriFactory.CreateDocumentUri(DatabaseName, CollectionName, product.Id);
+                await documentClient_.ReadDocumentAsync(uri);
                 logger_.LogInformation($"Found product {product.Id} {product.Name}");
+                
+                await documentClient_.ReplaceDocumentAsync(uri, product);
+                logger_.LogInformation($"Updated existing product {product.Id} {product.Name}");
             }
-            catch (DocumentClientException ex)
+            catch (DocumentClientException error)
             {
-                if (ex.StatusCode == HttpStatusCode.NotFound)
+                if (error.StatusCode == HttpStatusCode.NotFound)
                 {
                     await documentClient_.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), product);
-                    logger_.LogInformation($"Created product {product.Id} {product.Name}");
+                    logger_.LogInformation($"Created new product {product.Id} {product.Name}");
                 }
                 else
                 {
+                    logger_.LogError(error, $"Error registering {product.Name}");
                     throw;
                 }
             }
-       }
+
+            logger_.LogInformation($"Registration completed for {product.Name}");
+        }
+
+        private string GetHash(string input)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var result = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                return BitConverter.ToString(result).Replace("-", "");
+            }
+        }
     }
 }
