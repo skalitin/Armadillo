@@ -71,7 +71,8 @@ namespace Armadillo.Siebel
                 "OnDemand Migration for Email",
                 "InTrust",
                 "Migration Mgr for AD",
-                "On Demand Migrations"
+                "On Demand Migrations",
+                "On Demand Recovery"
             };
         }
 

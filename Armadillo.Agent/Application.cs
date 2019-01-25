@@ -66,6 +66,7 @@ namespace Armadillo.Agent
 
                 timer_.AutoReset = true;
                 timer_.Enabled = true;
+                timer_.Start();
 
                 logger_.LogInformation($"Periodic update started at every {timer_.Interval/60000} min.");
 
