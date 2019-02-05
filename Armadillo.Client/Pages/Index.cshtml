@@ -8,47 +8,58 @@
 @using System.Timers
 @using Microsoft.AspNetCore.WebUtilities
 
-<select bind="@ProductName">
-    @foreach (var item in ProductNames)
-    {
-        <option value="@item">@item</option>        
-    }
-</select>
-<span>&nbsp;&nbsp;</span>
+<div class="settings">
+<div class="select-wrapper">
+    <select bind="@ProductName">
+        @foreach (var item in ProductNames)
+        {
+            <option value="@item">@item</option>
+        }
+    </select>
+</div>
 
-<input type="checkbox" bind="@ShowCustomers" id="show-customers"/>
-<label for="show-customers">Show customers</label>
+<label class="checkbox-container" for="show-customers">Show customers
+    <input type="checkbox" bind="@ShowCustomers" id="show-customers"/>
+    <span class="checkmark"></span>
+</label>
 
-<span>&nbsp;&nbsp;</span>
-<input type="checkbox" bind="@ShowOwners" id="show-owners"/>
-<label for="show-owners">Show owners</label>
+<label class="checkbox-container" for="show-owners">Show owners
+    <input type="checkbox" bind="@ShowOwners" id="show-owners"/>
+    <span class="checkmark"></span>
+</label>
 
-<span>&nbsp;&nbsp;</span>
-<input type="checkbox" bind="@ShowGraph" id="show-graph"/>
-<label for="show-graph">Graph</label>
+<label class="checkbox-container" for="show-graph">Graph
+    <input type="checkbox" bind="@ShowGraph" id="show-graph"/>
+    <span class="checkmark"></span>
+</label>
 
-<span>&nbsp;&nbsp;</span>
-<input type="checkbox" bind="@Autorefresh" id="autorefresh"/>
-<label for="autorefresh">Auto refresh every @(timer_.Interval/60000) min.</label>
+<label class="checkbox-container" for="autorefresh">Auto refresh every @(timer_.Interval/60000) min.
+    <input type="checkbox" bind="@Autorefresh" id="autorefresh"/>
+    <span class="checkmark"></span>
+</label>
 
+@if (ProductSubcases != null)
+{
+    <a target="_blank" href="@ProductSubcases.ReportLink" class="report-link">Detailed report</a>
+}
+</div>
+
+<div class="content">
 @if (ProductSubcases == null)
 {
     <h1>Loading...</h1>
 }
 else
-{    
-    <span>&nbsp;&nbsp;</span>
-    <a target="_blank" href="@ProductSubcases.ReportLink">Detailed report</a>
-
+{
     if(!String.IsNullOrEmpty(ProductSubcases.Error))
     {
         <p>Error loading subcases: @ProductSubcases.Error</p>
     }
     else
     {
-        <h1>@ProductSubcases.Subcases.Length subcases for @ProductSubcases.Name</h1>
-        <div>
-            @if(ShowGraph) 
+        <h2>@ProductSubcases.Subcases.Length subcases for @ProductSubcases.Name</h2>
+        <div class="subcase-content">
+            @if(ShowGraph)
             {
                 <SubcaseGraph Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
             }
@@ -59,6 +70,7 @@ else
         </div>
     }
 }
+</div>
 
 @functions {
     private Timer timer_ = new Timer(1000 * 60 * 30);

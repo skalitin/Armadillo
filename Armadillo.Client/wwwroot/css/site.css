@@ -10,7 +10,143 @@ app {
 }
 
 .main {
-    padding: 2em;
-    position: relative;
+    display: flex;
     height: 100vh;
+}
+
+.settings {
+    min-width: 300px;
+    flex-basis: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    box-shadow: 1px 0 2px 0 rgba(0,0,0,0.1);
+}
+
+.content {
+    flex-grow: 1;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.subcase-content {
+    height: 100%;
+}
+
+.report-link {
+    padding-top: 1em;
+}
+
+/* Select */
+
+.select-wrapper {
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+}
+
+.select-wrapper:hover {
+    background: #eee;
+}
+
+.select-wrapper select {
+    padding: 5px 8px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.select-wrapper select:focus {
+    outline: none;
+}
+
+/* Checkbox */
+
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #fafafa;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #eee;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 6px;
+    top: 0;
+    width: 9px;
+    height: 15px;
+    border: solid #495057;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+@media (max-width: 900px) {
+    .main {
+        flex-wrap: wrap;
+    }
+
+    .settings,
+    .content {
+        padding: 1em;
+    }
+
+    .report-link {
+        margin-top: .5em;
+    }
+
+    .select-wrapper {
+        margin-bottom: .5em;
+    }
+
+    .settings {
+        min-width: 100%;
+    }
 }
