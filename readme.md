@@ -1,4 +1,4 @@
-[![Build status](https://smalltalker.visualstudio.com/SubcaseMonitor/_apis/build/status/SubcaseMonitor-CI)]
+![Build status](https://smalltalker.visualstudio.com/SubcaseMonitor/_apis/build/status/SubcaseMonitor-CI)
 
 # Support Subcase Visualization
 
