@@ -1,3 +1,5 @@
+[![Build status](https://smalltalker.visualstudio.com/SubcaseMonitor/_apis/build/status/SubcaseMonitor-CI)]
+
 # Support Subcase Visualization
 
 ## How to run development environment
