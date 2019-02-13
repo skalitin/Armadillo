@@ -33,6 +33,8 @@ namespace Armadillo.Siebel.Tests
         [TestMethod]
         public void TestMethod1()
         {
+            // spike
+            Assert.AreEqual("test", "test");
         }
     }
 }
