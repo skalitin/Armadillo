@@ -30,7 +30,7 @@ namespace Armadillo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
+            services.AddHttpClient();
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
