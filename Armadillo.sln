@@ -10,9 +10,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Armadillo.Shared", "Armadil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Armadillo.Chart", "Armadillo.Chart\Armadillo.Chart.csproj", "{21FFF635-2B20-450E-AB1F-1AC497D961DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Armadillo.Siebel", "Armadillo.Siebel\Armadillo.Siebel.csproj", "{8ED69AF9-AF56-4DDF-BC9A-E41108365A31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Armadillo.Data", "Armadillo.Data\Armadillo.Data.csproj", "{8ED69AF9-AF56-4DDF-BC9A-E41108365A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Armadillo.Siebel.Tests", "Armadillo.Siebel.Tests\Armadillo.Siebel.Tests.csproj", "{0B3D6999-0C37-4E5A-B818-9C31B2B97630}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Armadillo.Data.Tests", "Armadillo.Data.Tests\Armadillo.Data.Tests.csproj", "{0B3D6999-0C37-4E5A-B818-9C31B2B97630}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Armadillo.Agent", "Armadillo.Agent\Armadillo.Agent.csproj", "{FABF2EFA-613D-45E2-A1A2-E7CCFD146781}"
 EndProject

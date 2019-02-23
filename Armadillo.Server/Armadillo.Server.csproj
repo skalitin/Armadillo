@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Armadillo.Client\Armadillo.Client.csproj" />
     <ProjectReference Include="..\Armadillo.Shared\Armadillo.Shared.csproj" />
-    <ProjectReference Include="..\Armadillo.Siebel\Armadillo.Siebel.csproj" />
+    <ProjectReference Include="..\Armadillo.Data\Armadillo.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ using Armadillo.Shared;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
-namespace Armadillo.Siebel
+namespace Armadillo.Data
 {
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {

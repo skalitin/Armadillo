@@ -6,7 +6,7 @@ using Armadillo.Shared;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 
-namespace Armadillo.Siebel
+namespace Armadillo.Data
 {
     public class CosmosDataProvider : ISubcaseDataProdiver
     {

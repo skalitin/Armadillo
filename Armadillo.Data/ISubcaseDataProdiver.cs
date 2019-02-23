@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Armadillo.Shared;
 
-namespace Armadillo.Siebel
+namespace Armadillo.Data
 {
     public interface ISubcaseDataProdiver
     {

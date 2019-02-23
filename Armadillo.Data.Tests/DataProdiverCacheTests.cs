@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Armadillo.Shared;
 
-namespace Armadillo.Siebel.Tests
+namespace Armadillo.Data.Tests
 {
     class TestDataProvider : ISubcaseDataProdiver
     {

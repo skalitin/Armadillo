@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Armadillo.Shared;
 using Microsoft.Extensions.Logging;
 
-namespace Armadillo.Siebel
+namespace Armadillo.Data
 {
     class CachedSubcases
     {

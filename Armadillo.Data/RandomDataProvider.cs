@@ -5,7 +5,7 @@ using System.Linq;
 using Armadillo.Shared;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace Armadillo.Siebel
+namespace Armadillo.Data
 {
 
     public class RandomDataProvider : ISubcaseDataProdiver
