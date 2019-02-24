@@ -12,11 +12,13 @@ namespace Armadillo.Data
 {
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {
-        ILogger logger_;
+        private readonly ILogger logger_;
+        private readonly IHttpClientFactory htmlClientFactory_;
 
-        public ReportServerDataProvider(ILogger logger)
+        public ReportServerDataProvider(ILogger logger, IHttpClientFactory factory)
         {
             logger_ = logger;
+            htmlClientFactory_ = factory;
         }
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
@@ -81,6 +83,13 @@ namespace Armadillo.Data
             logger_.LogDebug("Loading report {url}", url);
 
             var uri = new Uri(url);
+
+            // using(var client = htmlClientFactory_.CreateClient())
+            // {
+            //     client.BaseAddress = uri;
+            //     return await client.GetStringAsync(url);
+            // }
+
             var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
             var handler = new HttpClientHandler { Credentials = credentialsCache };
             
