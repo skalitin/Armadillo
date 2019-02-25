@@ -1,4 +1,3 @@
-using Armadillo.Data;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +12,7 @@ using System.Net.Mime;
 using System.Net.Http;
 using System.Net;
 using Microsoft.Azure.Documents.Client;
+using Armadillo.Data;
 
 namespace Armadillo.Server
 {
@@ -67,9 +67,11 @@ namespace Armadillo.Server
             else if(String.Equals("Report", dataProviderName, StringComparison.OrdinalIgnoreCase))
             {
                 logger.LogInformation("Using SSRS report data provider");
+                var serviceProvider = services.BuildServiceProvider();
+                var reportServerClient = serviceProvider.GetService<IReportServerClient>();
 
                 var dataProviderCache = new DataProdiverCache(
-                    new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
+                    new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider"), reportServerClient), 
                     loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(5));
                 
                 services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);
