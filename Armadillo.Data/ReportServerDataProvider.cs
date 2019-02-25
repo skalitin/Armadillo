@@ -14,6 +14,7 @@ namespace Armadillo.Data
     {
         private readonly ILogger logger_;
         private readonly IHttpClientFactory htmlClientFactory_;
+        private static string ReportServerUrl = @"http://tfsreports.prod.quest.corp";
 
         public ReportServerDataProvider(ILogger logger, IHttpClientFactory factory)
         {
@@ -60,7 +61,7 @@ namespace Armadillo.Data
         }
         public string GetReportLink(string product)
         {
-            var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+            var template = ReportServerUrl + @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
             return QueryHelpers.AddQueryString(template, "Products", product);
         }
 
@@ -86,14 +87,16 @@ namespace Armadillo.Data
 
             // using(var client = htmlClientFactory_.CreateClient())
             // {
-            //     client.BaseAddress = uri;
             //     return await client.GetStringAsync(url);
             // }
-
-            var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
+            
+            var credentialsCache = new CredentialCache
+            {
+                 { new Uri(ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials }
+            };
             var handler = new HttpClientHandler { Credentials = credentialsCache };
             
-            using(var httpClient = new HttpClient(handler) { BaseAddress = uri  })
+            using(var httpClient = new HttpClient(handler))
             {
                 return await httpClient.GetStringAsync(url);
             }
