@@ -10,6 +10,8 @@ using Newtonsoft.Json.Serialization;
 using System.Linq;
 using System;
 using System.Net.Mime;
+using System.Net.Http;
+using System.Net;
 using Microsoft.Azure.Documents.Client;
 
 namespace Armadillo.Server
@@ -30,7 +32,14 @@ namespace Armadillo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddHttpClient();
+
+            // Configure ReportServerClient powered by HttpClientHandler with NTLM authentication
+            var credentials = new CredentialCache { { new Uri(ReportServerDataProvider.ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials } };
+            var clientHandler = new HttpClientHandler { Credentials = credentials };
+            services
+                .AddHttpClient<IReportServerClient, ReportServerClient>()
+                .ConfigurePrimaryHttpMessageHandler(() => clientHandler);
+
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]

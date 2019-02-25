@@ -13,19 +13,19 @@ namespace Armadillo.Data
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {
         private readonly ILogger logger_;
-        private readonly IHttpClientFactory htmlClientFactory_;
-        private static string ReportServerUrl = @"http://tfsreports.prod.quest.corp";
+        private readonly IReportServerClient _reportServerClient;
+        public static string ReportServerUrl = @"http://tfsreports.prod.quest.corp";
 
-        public ReportServerDataProvider(ILogger logger, IHttpClientFactory factory)
+        public ReportServerDataProvider(ILogger logger, IReportServerClient reportServerClient)
         {
             logger_ = logger;
-            htmlClientFactory_ = factory;
+            _reportServerClient = reportServerClient;
         }
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             var url = GetReportLink(product);
-            var page = await GetPageAsync(url);
+            var page = await GetReportAsync(url);
 
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(page);
@@ -79,29 +79,24 @@ namespace Armadillo.Data
             };
         }
 
-        private async Task<string> GetPageAsync(string url)
+        private async Task<string> GetReportAsync(string url)
         {
             logger_.LogDebug("Loading report {url}", url);
 
             var uri = new Uri(url);
+            return await _reportServerClient.GetReportAsync(url);
 
-            // using(var client = htmlClientFactory_.CreateClient())
-            // {
-            //     return await client.GetStringAsync(url);
-            // }
+            //var credentialsCache = new CredentialCache
+            //{
+            //     { new Uri(ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials }
+            //};
+            //var handler = new HttpClientHandler { Credentials = credentialsCache };
             
-            var credentialsCache = new CredentialCache
-            {
-                 { new Uri(ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials }
-            };
-            var handler = new HttpClientHandler { Credentials = credentialsCache };
-            
-            using(var httpClient = new HttpClient(handler))
-            {
-                return await httpClient.GetStringAsync(url);
-            }
+            //using(var httpClient = new HttpClient(handler))
+            //{
+            //    return await httpClient.GetStringAsync(url);
+            //}
         }
 
     }
-
 }
