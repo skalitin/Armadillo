@@ -12,13 +12,13 @@ namespace Armadillo.Data
 {
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {
-        private readonly ILogger logger_;
+        private readonly ILogger _logger;
         private readonly IReportServerClient _reportServerClient;
         public static string ReportServerUrl = @"http://tfsreports.prod.quest.corp";
 
         public ReportServerDataProvider(ILogger logger, IReportServerClient reportServerClient)
         {
-            logger_ = logger;
+            _logger = logger;
             _reportServerClient = reportServerClient;
         }
 
@@ -34,12 +34,12 @@ namespace Armadillo.Data
             var tableNode = htmlBody.SelectSingleNode("//table[@class='a209']");
             if(tableNode == null) {
                 var message = "Cannot parse HTML report, incorrect format.";
-                logger_.LogError(message);
+                _logger.LogError(message);
                 throw new ApplicationException(message);
             }
 
             var rowNodes = tableNode.SelectNodes("tr");
-            logger_.LogDebug("Rows: {Count}", rowNodes.Count);
+            _logger.LogDebug("Rows: {Count}", rowNodes.Count);
 
             var subcases = new List<Subcase>();
             int i = 0;
@@ -86,7 +86,7 @@ namespace Armadillo.Data
 
         private async Task<string> GetReportAsync(string url)
         {
-            logger_.LogDebug("Loading report {url}", url);
+            _logger.LogDebug("Loading report {url}", url);
 
             var uri = new Uri(url);
             return await _reportServerClient.GetReportAsync(url);
