@@ -19,4 +19,10 @@
     <ProjectReference Include="..\Armadillo.Shared\Armadillo.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\SampleReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

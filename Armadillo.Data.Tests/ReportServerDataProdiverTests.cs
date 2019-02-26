@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.IO;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Armadillo.Shared;
@@ -38,15 +39,17 @@ namespace Armadillo.Data.Tests
             CollectionAssert.AllItemsAreUnique(reportNames.ToArray());
         }
 
-        [Test]
-        public async Task ParseReportPage()
+        [Test, TestCaseSource("SampleReport")]
+        public async Task ParseReportPage(string report)
         {
             _mockReportClient
                 .Setup(o => o.GetReportAsync(It.IsAny<string>()))
-                .ReturnsAsync("<html></html>");
+                .ReturnsAsync(report);
 
             var result = await _dataProvider.GetSubcasesAsync("MyProduct");
             Assert.IsNotNull(result);
         }
+
+        public static string[] SampleReport => new[] { File.ReadAllText(@"Resources\SampleReport.html") };
     }
 }
