@@ -1,44 +1,51 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Armadillo.Shared;
 using Armadillo.Data;
 
 
 namespace Armadillo.Data.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ReportServerDataProviderTests
     {
-        private ReportServerDataProvider dataProvider_;
-        private static ILogger logger_;
+        private ReportServerDataProvider _dataProvider;
+        private static ILogger _logger;
+        private Mock<IReportServerClient> _mockReportClient;
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
+        [OneTimeSetUp]
+        public static void ClassInitialize()
         {
             var loggerFactory = new LoggerFactory();
-            logger_ = loggerFactory.CreateLogger("Test");
+            _logger = loggerFactory.CreateLogger("Test");
         }
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
-            dataProvider_ = new ReportServerDataProvider(logger_, null);
+            _mockReportClient = new Mock<IReportServerClient>();
+            _dataProvider = new ReportServerDataProvider(_logger, _mockReportClient.Object);
         }
 
-        [TestMethod]
+        [Test]
         public void AllProductNamesAreUnique()
         {
-            var reportNames = dataProvider_.GetProducts();
+            var reportNames = _dataProvider.GetProducts();
             CollectionAssert.AllItemsAreUnique(reportNames.ToArray());
         }
 
-        [TestMethod]
+        [Test]
         public async Task ParseReportPage()
         {
-            var result = await dataProvider_.GetSubcasesAsync("MyProduct");
+            _mockReportClient
+                .Setup(o => o.GetReportAsync(It.IsAny<string>()))
+                .ReturnsAsync("<html></html>");
+
+            var result = await _dataProvider.GetSubcasesAsync("MyProduct");
             Assert.IsNotNull(result);
         }
     }

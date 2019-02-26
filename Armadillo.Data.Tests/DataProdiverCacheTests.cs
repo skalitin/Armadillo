@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Armadillo.Shared;
@@ -27,10 +27,10 @@ namespace Armadillo.Data.Tests
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class DataProdiverCacheTests
     {
-        [TestMethod]
+        [Test]
         public void TestMethod1()
         {
             // spike

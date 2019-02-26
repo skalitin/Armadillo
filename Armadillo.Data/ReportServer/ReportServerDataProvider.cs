@@ -32,8 +32,13 @@ namespace Armadillo.Data
 
             var htmlBody = htmlDoc.DocumentNode;
             var tableNode = htmlBody.SelectSingleNode("//table[@class='a209']");
+            if(tableNode == null) {
+                var message = "Cannot parse HTML report, incorrect format.";
+                logger_.LogError(message);
+                throw new ApplicationException(message);
+            }
+
             var rowNodes = tableNode.SelectNodes("tr");
-                        
             logger_.LogDebug("Rows: {Count}", rowNodes.Count);
 
             var subcases = new List<Subcase>();
