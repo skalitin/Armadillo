@@ -1,4 +1,6 @@
-![Build status](https://smalltalker.visualstudio.com/SubcaseMonitor/_apis/build/status/SubcaseMonitor-CI)
+![Build](https://smalltalker.visualstudio.com/SubcaseMonitor/_apis/build/status/SubcaseMonitor-CI)
+![Deployment](https://smalltalker.vsrm.visualstudio.com/_apis/public/Release/badge/ebe36ad3-0e8c-4cce-beac-0fdd6f13c497/1/1)
+
 
 # Support Subcase Visualization
 
