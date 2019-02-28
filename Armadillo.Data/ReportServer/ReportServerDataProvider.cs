@@ -90,18 +90,6 @@ namespace Armadillo.Data
 
             var uri = new Uri(url);
             return await _reportServerClient.GetReportAsync(url);
-
-            //var credentialsCache = new CredentialCache
-            //{
-            //     { new Uri(ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials }
-            //};
-            //var handler = new HttpClientHandler { Credentials = credentialsCache };
-            
-            //using(var httpClient = new HttpClient(handler))
-            //{
-            //    return await httpClient.GetStringAsync(url);
-            //}
         }
-
     }
 }
