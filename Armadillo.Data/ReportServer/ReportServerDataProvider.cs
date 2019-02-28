@@ -47,7 +47,7 @@ namespace Armadillo.Data
             {
                 i++;
                 if(i <= 2) continue;
-                var cells = node.SelectNodes("td");
+                var cells = node.SelectNodes("td/div");
                 var subcase = new Subcase()
                 {
                     Id = cells[1].InnerText,

@@ -39,17 +39,41 @@ namespace Armadillo.Data.Tests
             CollectionAssert.AllItemsAreUnique(reportNames.ToArray());
         }
 
-        [Test, TestCaseSource("SampleReport")]
-        public async Task ParseReportPage(string report)
+        [Test]
+        public async Task ParsingReportPage()
         {
+            var report = GetReport("Report");
             _mockReportClient
                 .Setup(o => o.GetReportAsync(It.IsAny<string>()))
                 .ReturnsAsync(report);
 
-            var result = await _dataProvider.GetSubcasesAsync("MyProduct");
-            Assert.IsNotNull(result);
+            var subcases = (await _dataProvider.GetSubcasesAsync("MyProduct")).ToArray();
+            Assert.AreEqual(2, subcases.Length);
+
+            var subcase = subcases.First();
+            Assert.AreEqual("4385211-1", subcase.Id);
+            Assert.AreEqual("John Doe", subcase.Owner);
+            Assert.AreEqual("Sample Customer", subcase.Customer);
+            Assert.AreEqual("Sample Title", subcase.Title);
+            Assert.AreEqual("Waiting Support Response", subcase.Status);
+            Assert.AreEqual("2", subcase.Level);
         }
 
-        public static string[] SampleReport => new[] { File.ReadAllText(@"Resources\SampleReport.html") };
+        [Test]
+        public async Task ParsingEmptyReportPage()
+        {
+            var report = GetReport("EmptyReport");
+            _mockReportClient
+                .Setup(o => o.GetReportAsync(It.IsAny<string>()))
+                .ReturnsAsync(report);
+
+            var subcases = (await _dataProvider.GetSubcasesAsync("MyProduct")).ToArray();
+            Assert.AreEqual(0, subcases.Length);
+        }
+
+        private string GetReport(string name)
+        {
+            return File.ReadAllText($"Resources\\{name}.html");
+        }
     }
 }
