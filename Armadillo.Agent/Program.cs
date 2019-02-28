@@ -2,8 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Net;
+using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Armadillo.Data;
 
 namespace Armadillo.Agent
 {
@@ -27,6 +30,12 @@ namespace Armadillo.Agent
                 builder.AddDebug();
                 builder.AddConsole(); 
             });
+
+            var credentials = new CredentialCache { { new Uri(ReportServerDataProvider.ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials } };
+            var clientHandler = new HttpClientHandler { Credentials = credentials };
+            services
+                .AddHttpClient<IReportServerClient, ReportServerClient>()
+                .ConfigurePrimaryHttpMessageHandler(() => clientHandler);
 
             services.AddTransient<Application>();
         }   

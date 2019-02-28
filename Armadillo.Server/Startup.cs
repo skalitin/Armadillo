@@ -1,4 +1,3 @@
-using Armadillo.Data;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +9,10 @@ using Newtonsoft.Json.Serialization;
 using System.Linq;
 using System;
 using System.Net.Mime;
+using System.Net.Http;
+using System.Net;
 using Microsoft.Azure.Documents.Client;
+using Armadillo.Data;
 
 namespace Armadillo.Server
 {
@@ -30,6 +32,13 @@ namespace Armadillo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            // Configure ReportServerClient powered by HttpClientHandler with NTLM authentication
+            var credentials = new CredentialCache { { new Uri(ReportServerDataProvider.ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials } };
+            var clientHandler = new HttpClientHandler { Credentials = credentials };
+            services
+                .AddHttpClient<IReportServerClient, ReportServerClient>()
+                .ConfigurePrimaryHttpMessageHandler(() => clientHandler);
 
             services.AddResponseCompression(options =>
             {
@@ -58,9 +67,11 @@ namespace Armadillo.Server
             else if(String.Equals("Report", dataProviderName, StringComparison.OrdinalIgnoreCase))
             {
                 logger.LogInformation("Using SSRS report data provider");
+                var serviceProvider = services.BuildServiceProvider();
+                var reportServerClient = serviceProvider.GetService<IReportServerClient>();
 
                 var dataProviderCache = new DataProdiverCache(
-                    new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider")), 
+                    new ReportServerDataProvider(loggerFactory_.CreateLogger("ReportServerDataProvider"), reportServerClient), 
                     loggerFactory_.CreateLogger("DataProdiverCache"), TimeSpan.FromMinutes(5));
                 
                 services.AddSingleton<ISubcaseDataProdiver>(dataProviderCache);

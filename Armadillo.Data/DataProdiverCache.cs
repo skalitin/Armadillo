@@ -20,50 +20,50 @@ namespace Armadillo.Data
 
     public class DataProdiverCache : ISubcaseDataProdiver
     {
-        ISubcaseDataProdiver dataProdiver_;
-        TimeSpan refreshTimeout_;
-        Dictionary<string, CachedSubcases> cache_;
-        ILogger logger_;
+        ISubcaseDataProdiver _dataProdiver;
+        TimeSpan _refreshTimeout;
+        Dictionary<string, CachedSubcases> _cache;
+        ILogger _logger;
 
         public DataProdiverCache(ISubcaseDataProdiver dataProvider, ILogger logger, TimeSpan refreshTimeout)
         {
-            dataProdiver_ = dataProvider;
-            refreshTimeout_ = refreshTimeout;
-            logger_ = logger;
-            cache_ = new Dictionary<string, CachedSubcases>();
+            _dataProdiver = dataProvider;
+            _refreshTimeout = refreshTimeout;
+            _logger = logger;
+            _cache = new Dictionary<string, CachedSubcases>();
         }
 
         public IEnumerable<string> GetProducts()
         {
-            return dataProdiver_.GetProducts();
+            return _dataProdiver.GetProducts();
         }
 
         public string GetReportLink(string product)
         {
-            return dataProdiver_.GetReportLink(product);
+            return _dataProdiver.GetReportLink(product);
         }
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             var now = DateTime.Now;
             CachedSubcases cachedSubcases = null;
-            if(cache_.TryGetValue(product, out cachedSubcases))
+            if(_cache.TryGetValue(product, out cachedSubcases))
             {
-                logger_.LogDebug("Cached subcases found for {product}", product);
-                if(now - cachedSubcases.RequestTime < refreshTimeout_)
+                _logger.LogDebug("Cached subcases found for {product}", product);
+                if(now - cachedSubcases.RequestTime < _refreshTimeout)
                 {
-                    logger_.LogDebug("Return cached subcases for {product}", product);
+                    _logger.LogDebug("Return cached subcases for {product}", product);
                     return cachedSubcases.Subcases;
                 }
 
-                logger_.LogDebug("Cache expired for {product}", product);
+                _logger.LogDebug("Cache expired for {product}", product);
             }
 
-            logger_.LogDebug("Updating cache for {product}...", product);
-            var subcases = await dataProdiver_.GetSubcasesAsync(product);
+            _logger.LogDebug("Updating cache for {product}...", product);
+            var subcases = await _dataProdiver.GetSubcasesAsync(product);
 
-            logger_.LogDebug("Cache updated for {product}", product);
-            cache_[product] = new CachedSubcases(subcases);
+            _logger.LogDebug("Cache updated for {product}", product);
+            _cache[product] = new CachedSubcases(subcases);
 
             return subcases;
         }

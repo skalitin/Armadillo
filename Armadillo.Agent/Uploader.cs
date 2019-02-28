@@ -14,9 +14,9 @@ namespace Armadillo.Agent
 {
     public class Uploader
     {
-        private ISubcaseDataProdiver dataProdiver_;
-        private DocumentClient documentClient_;
-        private ILogger logger_;
+        private ISubcaseDataProdiver _dataProdiver;
+        private DocumentClient _documentClient;
+        private ILogger _logger;
 
         private readonly string DatabaseName = "SubcaseMonitor";
         
@@ -24,77 +24,77 @@ namespace Armadillo.Agent
 
         public Uploader(ISubcaseDataProdiver dataProdiver, DocumentClient documentClient, ILogger logger)
         {
-            dataProdiver_ = dataProdiver;
-            documentClient_ = documentClient;
-            logger_ = logger;
+            _dataProdiver = dataProdiver;
+            _documentClient = documentClient;
+            _logger = logger;
 
             InitializeAsync().Wait();
         }
 
         public async Task InitializeAsync()
         {
-            await documentClient_.CreateDatabaseIfNotExistsAsync(new Database { Id = DatabaseName });
+            await _documentClient.CreateDatabaseIfNotExistsAsync(new Database { Id = DatabaseName });
             
-            await documentClient_.CreateDocumentCollectionIfNotExistsAsync(
+            await _documentClient.CreateDocumentCollectionIfNotExistsAsync(
                 UriFactory.CreateDatabaseUri(DatabaseName),
                 new DocumentCollection { Id = CollectionName });
         }
 
         public async Task UpdateAsync()
         {
-            var productNames = dataProdiver_.GetProducts();
+            var productNames = _dataProdiver.GetProducts();
             foreach(var productName in productNames)
             {
                 try
                 {
-                    logger_.LogInformation($"Getting subcases for {productName}...");
-                    var subcases = (await dataProdiver_.GetSubcasesAsync(productName)).ToArray();
+                    _logger.LogInformation($"Getting subcases for {productName}...");
+                    var subcases = (await _dataProdiver.GetSubcasesAsync(productName)).ToArray();
 
-                    logger_.LogInformation($"{subcases.Count()} subcases for {productName}...");
+                    _logger.LogInformation($"{subcases.Count()} subcases for {productName}...");
                     var product = new Product
                     {
                         Id = GetHash(productName),
                         Name = productName,
-                        ReportLink = dataProdiver_.GetReportLink(productName),
+                        ReportLink = _dataProdiver.GetReportLink(productName),
                         Subcases = subcases.ToArray()
                     };
                     await RegisterProductAsync(product);
-                    logger_.LogInformation($"Update complete for {productName}");
+                    _logger.LogInformation($"Update complete for {productName}");
                 }
                 catch(Exception error)
                 {
-                    logger_.LogError(error, $"Error on updating subcases for {productName}");
+                    _logger.LogError(error, $"Error on updating subcases for {productName}");
                 }
             }
         }
 
         private async Task RegisterProductAsync(Product product)
         {
-            logger_.LogInformation($"Register {product.Name} and its subcases");
+            _logger.LogInformation($"Register {product.Name} and its subcases");
             try
             {
                 var uri = UriFactory.CreateDocumentUri(DatabaseName, CollectionName, product.Id);
-                await documentClient_.ReadDocumentAsync(uri);
-                logger_.LogInformation($"Found product {product.Id} {product.Name}");
+                await _documentClient.ReadDocumentAsync(uri);
+                _logger.LogInformation($"Found product {product.Id} {product.Name}");
                 
-                await documentClient_.ReplaceDocumentAsync(uri, product);
-                logger_.LogInformation($"Updated existing product {product.Id} {product.Name}");
+                await _documentClient.ReplaceDocumentAsync(uri, product);
+                _logger.LogInformation($"Updated existing product {product.Id} {product.Name}");
             }
             catch (DocumentClientException error)
             {
                 if (error.StatusCode == HttpStatusCode.NotFound)
                 {
-                    await documentClient_.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), product);
-                    logger_.LogInformation($"Created new product {product.Id} {product.Name}");
+                    await _documentClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName), product);
+                    _logger.LogInformation($"Created new product {product.Id} {product.Name}");
                 }
                 else
                 {
-                    logger_.LogError(error, $"Error registering {product.Name}");
+                    _logger.LogError(error, $"Error registering {product.Name}");
                     throw;
                 }
             }
 
-            logger_.LogInformation($"Registration completed for {product.Name}");
+            _logger.LogInformation($"Registration completed for {product.Name}");
         }
 
         private string GetHash(string input)

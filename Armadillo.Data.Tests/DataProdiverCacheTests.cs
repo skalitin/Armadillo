@@ -1,40 +1,36 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 using Armadillo.Shared;
+using Armadillo.Data;
+using Moq;
 
 namespace Armadillo.Data.Tests
 {
-    class TestDataProvider : ISubcaseDataProdiver
-    {
-        public IEnumerable<string> GetProducts()
-        {
-            return new string[]{};
-        }
-
-
-        public string GetReportLink(string product)
-        {
-            return "";
-        }
-
-        public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
-        {
-            return Task<IEnumerable<Subcase>>.Run(() =>
-            {
-                return (IEnumerable<Subcase>)new List<Subcase>();
-            });
-        }
-    }
-
-    [TestClass]
+    [TestFixture]
     public class DataProdiverCacheTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        private Mock<ISubcaseDataProdiver> _mockDataProvider;
+        private DataProdiverCache _dataProviderCache;
+
+        [SetUp]
+        public void SetUp()
         {
-            // spike
-            Assert.AreEqual("test", "test");
+            _mockDataProvider = new Mock<ISubcaseDataProdiver>();
+            _dataProviderCache = new DataProdiverCache(_mockDataProvider.Object, null, TimeSpan.FromSeconds(1));
+        }
+
+        [Test]
+        public void ProductListIsNotCached()
+        {
+            var products = new[]{ "product one", "product two" };
+            _mockDataProvider
+                .Setup(o => o.GetProducts())
+                .Returns(products);
+            
+            var result = _dataProviderCache.GetProducts();
+            Assert.AreEqual(products, result);
         }
     }
 }

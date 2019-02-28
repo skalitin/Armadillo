@@ -12,26 +12,34 @@ namespace Armadillo.Data
 {
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {
-        ILogger logger_;
+        private readonly ILogger _logger;
+        private readonly IReportServerClient _reportServerClient;
+        public static string ReportServerUrl = @"http://tfsreports.prod.quest.corp";
 
-        public ReportServerDataProvider(ILogger logger)
+        public ReportServerDataProvider(ILogger logger, IReportServerClient reportServerClient)
         {
-            logger_ = logger;
+            _logger = logger;
+            _reportServerClient = reportServerClient;
         }
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             var url = GetReportLink(product);
-            var page = await GetPageAsync(url);
+            var page = await GetReportAsync(url);
 
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(page);
 
             var htmlBody = htmlDoc.DocumentNode;
             var tableNode = htmlBody.SelectSingleNode("//table[@class='a209']");
+            if(tableNode == null) {
+                var message = "Cannot parse HTML report, incorrect format.";
+                _logger.LogError(message);
+                throw new ApplicationException(message);
+            }
+
             var rowNodes = tableNode.SelectNodes("tr");
-                        
-            logger_.LogDebug("Rows: {Count}", rowNodes.Count);
+            _logger.LogDebug("Rows: {Count}", rowNodes.Count);
 
             var subcases = new List<Subcase>();
             int i = 0;
@@ -39,7 +47,7 @@ namespace Armadillo.Data
             {
                 i++;
                 if(i <= 2) continue;
-                var cells = node.SelectNodes("td");
+                var cells = node.SelectNodes("td/div");
                 var subcase = new Subcase()
                 {
                     Id = cells[1].InnerText,
@@ -58,7 +66,7 @@ namespace Armadillo.Data
         }
         public string GetReportLink(string product)
         {
-            var template = @"http://tfsreports.prod.quest.corp/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+            var template = ReportServerUrl + @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=HTML4.0&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
             return QueryHelpers.AddQueryString(template, "Products", product);
         }
 
@@ -76,20 +84,12 @@ namespace Armadillo.Data
             };
         }
 
-        private async Task<string> GetPageAsync(string url)
+        private async Task<string> GetReportAsync(string url)
         {
-            logger_.LogDebug("Loading report {url}", url);
+            _logger.LogDebug("Loading report {url}", url);
 
             var uri = new Uri(url);
-            var credentialsCache = new CredentialCache { { uri, "NTLM", CredentialCache.DefaultNetworkCredentials } };
-            var handler = new HttpClientHandler { Credentials = credentialsCache };
-            
-            using(var httpClient = new HttpClient(handler) { BaseAddress = uri  })
-            {
-                return await httpClient.GetStringAsync(url);
-            }
+            return await _reportServerClient.GetReportAsync(url);
         }
-
     }
-
 }
