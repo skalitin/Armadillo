@@ -32,7 +32,7 @@ namespace Armadillo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddServerSideBlazor<Client.Startup>();
+            //services.AddServerSideBlazor<Client.Startup>();
 
             // Configure ReportServerClient powered by HttpClientHandler with NTLM authentication
             var credentials = new CredentialCache { { new Uri(ReportServerDataProvider.ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials } };
@@ -110,7 +110,7 @@ namespace Armadillo.Server
                 routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
             });
 
-            app.UseServerSideBlazor<Client.Startup>();
+            //app.UseServerSideBlazor<Client.Startup>();
         }
     }
 }

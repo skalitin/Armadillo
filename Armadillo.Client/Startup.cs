@@ -27,6 +27,7 @@ namespace Armadillo.Client
             }
         }
 
+
         public void Configure(IBlazorApplicationBuilder app)
         {
             app.AddComponent<App>("app");
