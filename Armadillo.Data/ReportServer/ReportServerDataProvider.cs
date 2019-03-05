@@ -78,6 +78,8 @@ namespace Armadillo.Data
                 "Recovery Manager for Exchange",
                 "OnDemand Migration for Email",
                 "InTrust",
+                "IT Search",
+                "LiteSpeed for SQL Server",
                 "Migration Mgr for AD",
                 "On Demand Migrations",
                 "On Demand Recovery"
