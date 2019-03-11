@@ -73,7 +73,7 @@ namespace Armadillo.Data.Tests
 
         private string GetReport(string name)
         {
-            return File.ReadAllText($"Resources\\{name}.html");
+            return File.ReadAllText($"Resources\\{name}.xml");
         }
     }
 }

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="SLA_x0020_Siebel_x0020__x0028_SPb_x0029_" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="SLA_x0020_Siebel_x0020__x0028_SPb_x0029_ http://tfsreports.prod.quest.corp/ReportServer?%2FSiebel%2FSPB%2FSLA%20Siebel%20(SPb)&amp;rs%3ACommand=Render&amp;rs%3AFormat=XML&amp;rc%3ASchema=True" Name="SLA Siebel (SPb)">
+  <Tablix1>
+    <Details_Collection>
+      <Details COL_NUM="4385211-1" COLTITLE="Sample Title" COL_PR="Level 2" COLOWNER="John Doe" PRODUCT="MyProduct" VERSION="9.0.1" COL_STAT="Open" X_RD_STATUS="Waiting Support Response" CUSTOMER="Sample Customer" COLCREATED="2018-11-30T22:40:58" CRSFIRSTSUP="2018-11-30T22:43:25" CRSFIRSTDEV="2018-12-04T18:44:38" STATECHANGE="2019-02-27T19:51:43" DeltaState="6.29791641235352" LASTSP="2019-02-28T14:51:02" LASTRD="" COLCLOSED="" />
+      <Details COL_NUM="4385211-2" COLTITLE="Sample Title" COL_PR="Level 2" COLOWNER="John Doe" PRODUCT="MyProduct" VERSION="9.0.1" COL_STAT="Open" X_RD_STATUS="Waiting Support Response" CUSTOMER="Sample Customer" COLCREATED="2018-11-30T22:40:58" CRSFIRSTSUP="2018-11-30T22:43:25" CRSFIRSTDEV="2018-12-04T18:44:38" STATECHANGE="2019-02-27T19:51:43" DeltaState="6.29791641235352" LASTSP="2019-02-28T14:51:02" LASTRD="" COLCLOSED="" />
+    </Details_Collection>
+  </Tablix1>
+</Report>
