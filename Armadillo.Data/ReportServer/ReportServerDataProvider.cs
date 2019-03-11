@@ -7,6 +7,7 @@ using Armadillo.Shared;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System.Xml;
+using System.Globalization;
 
 namespace Armadillo.Data
 {
@@ -39,6 +40,8 @@ namespace Armadillo.Data
                     Owner = e.Attribute("COLOWNER")?.Value,
                     Status = e.Attribute("X_RD_STATUS")?.Value,
                     Customer = e.Attribute("CUSTOMER")?.Value,
+                    Created = ParseDateTime(e.Attribute("COLCREATED")?.Value),
+                    LastUpdate = ParseDateTime(e.Attribute("STATECHANGE")?.Value),
                     Loaded = DateTime.UtcNow
                 });
             }
@@ -78,6 +81,12 @@ namespace Armadillo.Data
 
             var uri = new Uri(url);
             return await _reportServerClient.GetReportAsync(url);
+        }
+
+        private static DateTime ParseDateTime(string value)
+        {
+            DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result);
+            return result;
         }
     }
 }

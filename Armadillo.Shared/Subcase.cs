@@ -27,5 +27,11 @@ namespace Armadillo.Shared
         
         [JsonProperty("loaded")]
         public DateTime Loaded { get; set; }
+
+        [JsonProperty("created")]
+        public DateTime Created { get; set; }
+        
+        [JsonProperty("lastUpdate")]
+        public DateTime LastUpdate { get; set; }
     }
 }
