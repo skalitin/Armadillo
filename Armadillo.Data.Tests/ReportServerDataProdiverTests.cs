@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Armadillo.Shared;
 using Armadillo.Data;
-
+using System.Globalization;
 
 namespace Armadillo.Data.Tests
 {
@@ -58,8 +58,8 @@ namespace Armadillo.Data.Tests
             Assert.AreEqual("Sample Title", subcase.Title);
             Assert.AreEqual("Waiting Support Response", subcase.Status);
             Assert.AreEqual("2", subcase.Level);
-            Assert.AreEqual(DateTime.Parse("10.12.18 06:22"), subcase.Created);
-            Assert.AreEqual(DateTime.Parse("14.02.19 14:20"), subcase.LastUpdate);
+            Assert.AreEqual(DateTime.ParseExact("10.12.18 06:22", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None), subcase.Created);
+            Assert.AreEqual(DateTime.ParseExact("14.02.19 14:20", "dd.MM.yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None), subcase.LastUpdate);
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace Armadillo.Data.Tests
 
         private string GetReport(string name)
         {
-            return File.ReadAllText($"Resources\\{name}.html");
+            return File.ReadAllText($"Resources\\{name}.xml");
         }
     }
 }
