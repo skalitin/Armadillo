@@ -82,7 +82,7 @@ namespace Armadillo.Data
             var uri = new Uri(url);
             return await _reportServerClient.GetReportAsync(url);
         }
-
+        
         private static DateTime ParseDateTime(string value)
         {
             DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result);
