@@ -51,6 +51,8 @@ namespace Armadillo.Data
                     Customer = "Customer " + rng.Next(1, 5),
                     Owner = "Owner " + rng.Next(1, 7),
                     Status = statuses[rng.Next(0, statuses.Length)],
+                    Created = DateTime.UtcNow - TimeSpan.FromDays(rng.Next(10, 30)) - TimeSpan.FromMinutes(rng.Next(0, 30)),
+                    LastUpdate = DateTime.UtcNow - TimeSpan.FromDays(rng.Next(0, 7)) - TimeSpan.FromMinutes(rng.Next(0, 30)),
                     Loaded = DateTime.UtcNow
                 });
             });

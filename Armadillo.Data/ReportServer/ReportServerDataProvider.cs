@@ -56,6 +56,8 @@ namespace Armadillo.Data
                     Owner = cells[4].InnerText,
                     Status = cells[8].InnerText,
                     Customer = cells[9].InnerText,
+                    Created = ParseDateTime(cells[10].InnerText),
+                    LastUpdate = ParseDateTime(cells[13].InnerText),
                     Loaded = DateTime.UtcNow
                 };
                 
@@ -92,6 +94,13 @@ namespace Armadillo.Data
 
             var uri = new Uri(url);
             return await _reportServerClient.GetReportAsync(url);
+        }
+
+        private DateTime ParseDateTime(string value)
+        {
+            DateTime result = DateTime.MinValue;
+            DateTime.TryParse(value, out result);
+            return result;
         }
     }
 }
