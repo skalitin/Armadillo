@@ -11,8 +11,8 @@ function RenderNetwork(network) {
           stabilization: false
         },      
         nodes: {
-          borderWidth: 2,
           shadow: true,
+          // borderWidth: 2,
           // scaling: {
           //   customScalingFunction: function (min, max, total, value) {
           //     return value/total;
@@ -59,6 +59,7 @@ function RenderNetwork(network) {
         }
       };
     
+    console.log(data);
     var container = document.getElementById('network-wrapper');
     window.network = new vis.Network(container, data, options);
 }
