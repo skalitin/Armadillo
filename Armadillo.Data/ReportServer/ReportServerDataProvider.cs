@@ -11,6 +11,12 @@ using System.Globalization;
 
 namespace Armadillo.Data
 {
+    enum ReportFormat
+    {
+        XML,
+        HTML
+    }
+
     public class ReportServerDataProvider : ISubcaseDataProdiver
     {
         private readonly ILogger _logger;
@@ -47,7 +53,7 @@ namespace Armadillo.Data
             }
             catch (XmlException exception)
             {
-                const string message = "Cannot parse HTML report, incorrect format.";
+                const string message = "Cannot parse XML report, incorrect format.";
                 _logger.LogError(exception, message);
                 throw new ApplicationException(message);
             }
@@ -55,7 +61,16 @@ namespace Armadillo.Data
 
         public string GetReportLink(string product)
         {
-            var template = ReportServerUrl + @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=xml&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+            return GetReportLink(product, ReportFormat.HTML);
+        }
+
+        private string GetReportLink(string product, ReportFormat format)
+        {
+            var template = ReportServerUrl + 
+                @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=" + 
+                (format == ReportFormat.HTML ? "HTML4.0" : "XML") + 
+                @"&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+
             return QueryHelpers.AddQueryString(template, "Products", product);
         }
 
