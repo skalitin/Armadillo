@@ -11,6 +11,8 @@
                 @if(ShowOwners) {  <th>Owner</th> }
                 <th>Level</th>
                 <th>Status</th>
+                <th>Created</th>
+                <th>Last Update</th>
             </tr>
         </thead>
          <tbody>
@@ -23,6 +25,8 @@
                     @if(ShowOwners) { <td>@subcase.Owner</td> }
                     <td>@subcase.Level</td>
                     <td>@subcase.Status</td>
+                    <td>@subcase.Created</td>
+                    <td>@subcase.LastUpdate</td>
                 </tr>
             }
         </tbody>
