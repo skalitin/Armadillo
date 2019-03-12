@@ -31,7 +31,7 @@ namespace Armadillo.Data
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
-            var url = GetReportLink(product);
+            var url = GetReportLink(product, ReportFormat.XML);
             var page = await GetReportAsync(url);
             try
             {
