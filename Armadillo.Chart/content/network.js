@@ -59,7 +59,6 @@ function RenderNetwork(network) {
         }
       };
     
-    console.log(data);
     var container = document.getElementById('network-wrapper');
     window.network = new vis.Network(container, data, options);
 }
