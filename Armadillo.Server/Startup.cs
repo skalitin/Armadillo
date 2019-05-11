@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;
 using System.Linq;
@@ -31,7 +31,7 @@ namespace Armadillo.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddNewtonsoftJson();
 
             // Configure ReportServerClient powered by HttpClientHandler with NTLM authentication
             var credentials = new CredentialCache { { new Uri(ReportServerDataProvider.ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials } };
@@ -42,11 +42,7 @@ namespace Armadillo.Server
 
             services.AddResponseCompression(options =>
             {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                {
-                    MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
-                });
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
             });
 
             AddDataProvider(services);
@@ -95,7 +91,7 @@ namespace Armadillo.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
 
@@ -104,9 +100,11 @@ namespace Armadillo.Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
+                routes.MapDefaultControllerRoute();
             });
 
             app.UseBlazor<Client.Startup>();
