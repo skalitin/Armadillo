@@ -5,6 +5,6 @@
 # Support Subcase Visualization
 
 ## How to run development environment
-* Install .NET Core 2.1 SDK (Blazor doesn't support 2.2), https://dotnet.microsoft.com/download/dotnet-core/2.1
+* Install .NET Core 3.0 SDK, https://dotnet.microsoft.com/download/dotnet-core/3.0
 * `cd Armadillo.Server`
 * `dotnet run`
