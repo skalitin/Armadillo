@@ -11,8 +11,8 @@ function RenderNetwork(network) {
           stabilization: false
         },      
         nodes: {
-          borderWidth: 2,
           shadow: true,
+          // borderWidth: 2,
           // scaling: {
           //   customScalingFunction: function (min, max, total, value) {
           //     return value/total;

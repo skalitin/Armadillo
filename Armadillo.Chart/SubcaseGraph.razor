@@ -35,6 +35,8 @@
             $"Status: {subcase.Status}<br>" + 
             $"Customer: {subcase.Customer}<br>" + 
             $"Owner: {subcase.Owner}<br>" + 
+            $"Created: {subcase.Created}<br>" + 
+            $"Last update {subcase.LastUpdate}<br>" + 
             $"Refreshed at: {subcase.Loaded} UTC<br>" + 
             $"{subcase.Title}";
     }
@@ -43,7 +45,7 @@
     {
         if(level == 1)
         {
-            return "red";
+            return "maroon";
         }
 
         if(status == "Fix Provided")
@@ -68,11 +70,21 @@
             .Select(each => 
             {
                 var level = Int32.Parse(each.Level);
-                return new Node(each.Id, each.Id) {
+                var node =  new Node(each.Id, each.Id)
+                {
                     Title = GetTitle(each),
-                    Color = GetColor(level, each.Status),
                     Value = 4 - level
                 };
+
+                var color = new NodeColor(GetColor(level, each.Status));
+                if(DateTime.UtcNow - each.Created > TimeSpan.FromDays(30))
+                {
+                    color.Border = "red";
+                    node.BorderWidth = 5;
+                }
+
+                node.Color = color;    
+                return node;
             })
             .ToList();
         var edges = new List<Edge>();
