@@ -1,0 +1,7 @@
+{
+    "FSharp.fsacRuntime": "netcore",
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true
+    }
+}
