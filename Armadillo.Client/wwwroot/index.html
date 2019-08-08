@@ -11,6 +11,11 @@
 </head>
 <body>
 <app>Loading...</app>
+    
+<script>
+    setInterval(() => fetch('/.auth/refresh'), 60000 * 5 ) 
+</script>
+    
 <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>
