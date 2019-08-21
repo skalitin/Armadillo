@@ -53,7 +53,7 @@ namespace Armadillo.Data
                     Status = statuses[rng.Next(0, statuses.Length)],
                     Created = DateTime.UtcNow - TimeSpan.FromDays(rng.Next(10, 60)) - TimeSpan.FromMinutes(rng.Next(0, 30)),
                     LastUpdate = DateTime.UtcNow - TimeSpan.FromDays(rng.Next(0, 7)) - TimeSpan.FromMinutes(rng.Next(0, 30)),
-                    Loaded = DateTime.UtcNow
+                    Loaded = DateTime.UtcNow - TimeSpan.FromMinutes(rng.Next(0, 3))
                 });
             });
         }

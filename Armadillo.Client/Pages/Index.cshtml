@@ -57,7 +57,9 @@ else
     }
     else
     {
-        <h2>@ProductSubcases.Subcases.Length subcases</h2>
+        var updated = (int)((DateTime.UtcNow - ProductSubcases.Loaded).TotalMinutes);
+        var updatedText = updated == 0 ? "updated less than a minute ago" : "updated " + updated + " minutes ago";
+        <h2>@ProductSubcases.Subcases.Length subcases, @updatedText</h2>
         <div class="subcase-content">
             @if(ShowGraph)
             {

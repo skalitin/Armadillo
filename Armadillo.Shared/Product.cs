@@ -20,6 +20,15 @@ namespace Armadillo.Shared
         [JsonProperty("reportlink")]
         public string ReportLink { get; set; }
         
+        [JsonProperty("loaded")]
+        public DateTime Loaded
+        { 
+            get
+            {
+                return Subcases.Length == 0 ? DateTime.MinValue : Subcases[0].Loaded;
+            }
+        }
+
         public override string ToString()
         {
             return String.Format("{0}: {1} subcases", Name, Subcases == null ? 0 : Subcases.Length);
