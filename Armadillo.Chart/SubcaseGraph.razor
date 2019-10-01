@@ -8,15 +8,15 @@
 
 <div id="network-wrapper"/>
 
-@functions {
+@code {
     [Parameter]
-    private Product Product { get; set; }
+    public Product Product { get; set; }
    
     [Parameter]
-    private bool ShowCustomers { get; set; }
+    public bool ShowCustomers { get; set; }
     
     [Parameter]
-    private bool ShowOwners { get; set; }
+    public bool ShowOwners { get; set; }
 
     public async Task RenderNetworkAsync(Network network)
     {
@@ -57,7 +57,7 @@
         return status == "Update from Support" ? "orange" : "olive";
     }
 
-    protected override async Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(Product == null)
         {

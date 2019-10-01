@@ -74,7 +74,7 @@ else
 }
 </div>
 
-@functions {
+@code {
     private Timer timer_ = new Timer(1000 * 60 * 30);
     private IEnumerable<string> ProductNames { get; set; } = new string[]{};
     
@@ -111,7 +111,7 @@ else
     private bool ShowOwners { get; set; } = true;
     private Product ProductSubcases { get; set; }
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         ProductNames = await Http.GetJsonAsync<IEnumerable<string>>("api/products");
         ProductName = ProductNames.FirstOrDefault();
