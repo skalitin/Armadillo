@@ -100,14 +100,14 @@ namespace Armadillo.Server
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseClientSideBlazorFiles<Client.Startup>();
             app.UseRouting();
 
             app.UseEndpoints(routes =>
             {
                 routes.MapDefaultControllerRoute();
+                routes.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
             });
-
-            app.UseBlazor<Client.Startup>();
         }
     }
 }
