@@ -4,6 +4,7 @@ and uploads it to the CosmosDB.
 
 ## How to publish agent 
 * Run `dotnet publish --configuration release --output <output folder>`
+* Or for self-contained deployemnt (.NET Core libraries will be included) run `dotnet publish --configuration release --self-contained --runtime win-x86 --output <output folder>`
 * Copy content of the `<output folder>` to the target machine
 * Configure CosmosDB access by setting endpoint URI and key. To do that, run the following commands
     ```
