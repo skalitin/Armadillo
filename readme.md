@@ -1,5 +1,5 @@
-![Build](https://smalltalker.visualstudio.com/SubcaseMonitor/_apis/build/status/SubcaseMonitor-CI)
-![Deployment](https://smalltalker.vsrm.visualstudio.com/_apis/public/Release/badge/ebe36ad3-0e8c-4cce-beac-0fdd6f13c497/1/1)
+![Build](https://dev.azure.com/smalltalker/SubcaseMonitor/_apis/build/status/Continuous%20Integration)
+![Deployment](https://vsrm.dev.azure.com/smalltalker/_apis/public/Release/badge/ebe36ad3-0e8c-4cce-beac-0fdd6f13c497/1/3)
 
 
 # Support Subcase Visualization
