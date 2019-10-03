@@ -5,9 +5,6 @@
 # Support Subcase Visualization
 
 ## How to run development environment
-* Install .NET Core 2.2.105 SDK (check the global.json file for exact version)
+* Install .NET Core 3.0 SDK, https://dotnet.microsoft.com/download/dotnet-core/3.0
 * `cd Armadillo.Server`
 * `dotnet run`
-
-## Staging environment
-* Staging powered by Azure App Service is running here https://subcasemonitor-stage.azurewebsites.net/
