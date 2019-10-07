@@ -19,22 +19,22 @@
 </div>
 
 <label class="checkbox-container" for="show-customers">Show customers
-    <input type="checkbox" bind="@ShowCustomers" id="show-customers"/>
+    <input type="checkbox" @bind="@ShowCustomers" id="show-customers"/>
     <span class="checkmark"></span>
 </label>
 
 <label class="checkbox-container" for="show-owners">Show owners
-    <input type="checkbox" bind="@ShowOwners" id="show-owners"/>
+    <input type="checkbox" @bind="@ShowOwners" id="show-owners"/>
     <span class="checkmark"></span>
 </label>
 
 <label class="checkbox-container" for="show-graph">Graph
-    <input type="checkbox" bind="@ShowGraph" id="show-graph"/>
+    <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
     <span class="checkmark"></span>
 </label>
 
 <label class="checkbox-container" for="autorefresh">Auto refresh every @(timer_.Interval/60000) min.
-    <input type="checkbox" bind="@Autorefresh" id="autorefresh"/>
+    <input type="checkbox" @bind="@Autorefresh" id="autorefresh"/>
     <span class="checkmark"></span>
 </label>
 
