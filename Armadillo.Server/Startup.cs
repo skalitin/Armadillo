@@ -32,10 +32,19 @@ namespace Armadillo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddNewtonsoftJson();
-            
+
             var clientHandler = new HttpClientHandler();
-            clientHandler.Credentials = new NetworkCredential(configuration_["Username"], configuration_["Password"]);
- 
+            if (configuration_["Username"] == null || configuration_["Password"] == null)
+            {
+                // Configure ReportServerClient powered by HttpClientHandler with NTLM authentication
+                var credentials = new CredentialCache { { new Uri(ReportServerDataProvider.ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials } };
+                clientHandler.Credentials = credentials;
+            }
+            else
+            {
+                clientHandler.Credentials = new NetworkCredential(configuration_["Username"], configuration_["Password"]);
+            }
+
             services
                 .AddHttpClient<IReportServerClient, ReportServerClient>()
                 .ConfigurePrimaryHttpMessageHandler(() => clientHandler);
