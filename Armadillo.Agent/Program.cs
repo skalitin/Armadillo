@@ -38,7 +38,17 @@ namespace Armadillo.Agent
             var configuration = builder.Build();
 
             var clientHandler = new HttpClientHandler();
-            clientHandler.Credentials = new NetworkCredential(configuration["Username"], configuration["Password"]);
+            if (configuration["Username"] == null || configuration["Password"] == null)
+            {
+                // Configure ReportServerClient powered by HttpClientHandler with NTLM authentication
+                var credentials = new CredentialCache { { new Uri(ReportServerDataProvider.ReportServerUrl), "NTLM", CredentialCache.DefaultNetworkCredentials } };
+                clientHandler.Credentials = credentials;
+            }
+            else
+            {
+                clientHandler.Credentials = new NetworkCredential(configuration["Username"], configuration["Password"]);
+            }
+
             services
                 .AddHttpClient<IReportServerClient, ReportServerClient>()
                 .ConfigurePrimaryHttpMessageHandler(() => clientHandler);
