@@ -9,5 +9,4 @@
 * `cd Armadillo.Server`
 * `dotnet run`
 
-To run in Linux environment install `gss-ntlmssp` package.
-Specify your username and password in `Armadillo.Agent` and `Armadillo.Server` JSON files.
+* To run in Linux environment install `gss-ntlmssp` package.
