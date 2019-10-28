@@ -8,3 +8,5 @@
 * Install .NET Core 3.0 SDK, https://dotnet.microsoft.com/download/dotnet-core/3.0
 * `cd Armadillo.Server`
 * `dotnet run`
+
+* To run in Linux environment install `gss-ntlmssp` package.

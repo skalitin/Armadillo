@@ -11,6 +11,11 @@ and uploads it to the CosmosDB.
     dotnet user-secrets set "CosmosDB:EndpointUri" "https://subcasemonitor.documents.azure.com:443/" --id 28e6f711-a4c4-4cef-9e37-50ebfee35f91
     dotnet user-secrets set "CosmosDB:PrimaryKey" "<access key>" --id 28e6f711-a4c4-4cef-9e37-50ebfee35f91
     ```
+* Configure custom credentials. To do that, run the following commands
+	```
+	dotnet user-secrets set "Username" "<type your username here>" --id 28e6f711-a4c4-4cef-9e37-50ebfee35f91
+	dotnet user-secrets set "Password" "<type your password here>" --id 28e6f711-a4c4-4cef-9e37-50ebfee35f91
+	```
 * Run `dotnet Armadillo.Agent.dll` 
 
 ## Data providers
