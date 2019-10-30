@@ -29,7 +29,6 @@ namespace Armadillo.Shared
             }
         }
 
-
         public override string ToString()
         {
             return String.Format("{0}: {1} subcases", Name, Subcases == null ? 0 : Subcases.Length);
