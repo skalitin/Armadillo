@@ -8,5 +8,7 @@
 * Install .NET Core 3.0 SDK, https://dotnet.microsoft.com/download/dotnet-core/3.0
 * `cd Armadillo.Server`
 * `dotnet run`
+* To run in Linux environment also install the `gss-ntlmssp` package
 
-* To run in Linux environment install `gss-ntlmssp` package.
+## Contribution
+Feel free to creare issues or pull requests! Staging environment is available at https://subcasemonitor-stage.azurewebsites.net, production is here https://subcasemonitor.com
