@@ -11,4 +11,4 @@
 * To run in Linux environment also install the `gss-ntlmssp` package
 
 ## Contribution
-Feel free to creare issues or pull requests! Staging environment is available at https://subcasemonitor-stage.azurewebsites.net, production is here https://subcasemonitor.com
+Feel free to creare issues or pull requests! Staging environment is available at https://subcasemonitor-stage.azurewebsites.net, production is here https://subcasemonitor.com 
