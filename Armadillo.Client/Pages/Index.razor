@@ -33,11 +33,6 @@
     <span class="checkmark"></span>
 </label>
 
-<label class="checkbox-container" for="autorefresh">Auto refresh every @(timer_.Interval/60000) min.
-    <input type="checkbox" @bind="@Autorefresh" id="autorefresh"/>
-    <span class="checkmark"></span>
-</label>
-
 @if (ProductSubcases != null)
 {
     <a target="_blank" href="@ProductSubcases.ReportLink" class="report-link">Detailed report...</a>
@@ -92,20 +87,6 @@ else
         }
     }
 
-    private bool autorefresh_ = true;
-    private bool Autorefresh
-    { 
-        get
-        {  
-             return autorefresh_;
-        }
-        set
-        {
-            autorefresh_ = value;
-            timer_.Enabled = autorefresh_;
-        }
-    }
-
     private bool ShowGraph { get; set; } = true;
     private bool ShowCustomers { get; set; } = true;
     private bool ShowOwners { get; set; } = true;
@@ -117,7 +98,7 @@ else
         ProductName = ProductNames.FirstOrDefault();
         
         timer_.Elapsed += (sender, e) => ReloadSubcases();
-        timer_.Enabled = Autorefresh;
+        timer_.Enabled = true;
     }
 
     private void ReloadSubcases()
