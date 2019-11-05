@@ -10,7 +10,7 @@
 
 <div class="settings">
 <div class="select-wrapper">
-    <select bind="@ProductName">
+    <select @bind="@ProductName">
         @foreach (var item in ProductNames)
         {
             <option value="@item">@item</option>
