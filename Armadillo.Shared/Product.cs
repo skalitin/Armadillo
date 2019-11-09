@@ -25,7 +25,15 @@ namespace Armadillo.Shared
         { 
             get
             {
-                return Subcases.Length == 0 ? DateTime.MinValue : Subcases[0].Loaded;
+                return (Subcases == null || Subcases.Length == 0) ? DateTime.MinValue : Subcases[0].Loaded;
+            }
+        }
+
+        public bool HasLoadedTime
+        {
+            get 
+            {
+                return Loaded != DateTime.MinValue;
             }
         }
 

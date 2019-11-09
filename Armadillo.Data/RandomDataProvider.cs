@@ -15,7 +15,8 @@ namespace Armadillo.Data
             return new[]
             {
                 "Product One",
-                "Product Two"
+                "Product Two",
+                "No subcases"
             };
         }
         public string GetReportLink(string product)
@@ -27,6 +28,12 @@ namespace Armadillo.Data
         public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
         {
             return Task<IEnumerable<Subcase>>.Run(() => {
+
+                if(product == "No subcases") 
+                {
+                    return new List<Subcase>();
+                }
+
                 var rng = new Random();
                 var max = rng.Next(10, 15);
                 var statuses = new[]
