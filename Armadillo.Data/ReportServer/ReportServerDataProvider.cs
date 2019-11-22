@@ -85,7 +85,7 @@ namespace Armadillo.Data
                 "IT Search",
                 "LiteSpeed for SQL Server",
                 "Migration Mgr for AD",
-                "On Demand Migrations",
+                "On Demand Migration - Azure",
                 "On Demand Recovery"
             };
         }
