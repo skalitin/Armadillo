@@ -84,8 +84,9 @@ namespace Armadillo.Data
                 "InTrust",
                 "IT Search",
                 "LiteSpeed for SQL Server",
-                "Migration Mgr for AD",
-                "On Demand Migration - Azure",
+                "Migration Manager for AD",
+                "Migration Manager for Exchange",
+                "On Demand Migration: On Demand Migration – Azure",
                 "On Demand Recovery"
             };
         }
