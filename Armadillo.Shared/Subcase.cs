@@ -32,6 +32,6 @@ namespace Armadillo.Shared
         public DateTime Created { get; set; }
         
         [JsonProperty("lastUpdate")]
-        public DateTime LastUpdate { get; set; }
+        public DateTime LastUpdate { get; set; }                
     }
 }

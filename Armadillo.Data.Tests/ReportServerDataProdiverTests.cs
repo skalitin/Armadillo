@@ -34,22 +34,15 @@ namespace Armadillo.Data.Tests
         }
 
         [Test]
-        public void AllProductNamesAreUnique()
+        public async Task ParsingReport()
         {
-            var reportNames = _dataProvider.GetProducts();
-            CollectionAssert.AllItemsAreUnique(reportNames.ToArray());
-        }
-
-        [Test]
-        public async Task ParsingReportPage()
-        {
-            var report = GetReport("Report");
+            var report = GetReport("Report.xml");
             _mockReportClient
                 .Setup(o => o.GetReportAsync(It.IsAny<string>()))
                 .ReturnsAsync(report);
 
             var subcases = (await _dataProvider.GetSubcasesAsync("MyProduct")).ToArray();
-            Assert.AreEqual(2, subcases.Length);
+            Assert.AreEqual(3, subcases.Length);
 
             var subcase = subcases.First();
             Assert.AreEqual("4385211-1", subcase.Id);
@@ -63,9 +56,9 @@ namespace Armadillo.Data.Tests
         }
 
         [Test]
-        public async Task ParsingEmptyReportPage()
+        public async Task ParsingEmptyReport()
         {
-            var report = GetReport("EmptyReport");
+            var report = GetReport("EmptyReport.xml");
             _mockReportClient
                 .Setup(o => o.GetReportAsync(It.IsAny<string>()))
                 .ReturnsAsync(report);
@@ -74,9 +67,22 @@ namespace Armadillo.Data.Tests
             Assert.AreEqual(0, subcases.Length);
         }
 
+        [Test]
+        public async Task ParsingPageSourceToGetReportList()
+        {
+            var report = GetReport("PageSource.html");
+            _mockReportClient
+                .Setup(o => o.GetReportAsync(It.IsAny<string>()))
+                .ReturnsAsync(report);
+
+            var products = await _dataProvider.GetProductsAsync();
+            Assert.AreEqual("InTrust", products.First());
+            CollectionAssert.Contains(products, "Recovery Manager for AD");
+        }
+
         private string GetReport(string name)
         {
-            return File.ReadAllText($"Resources\\{name}.xml");
+            return File.ReadAllText($"Resources\\{name}");
         }
     }
 }

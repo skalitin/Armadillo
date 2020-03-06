@@ -10,19 +10,15 @@ namespace Armadillo.Data
 
     public class RandomDataProvider : ISubcaseDataProdiver
     {        
-        public IEnumerable<string> GetProducts()
+        public Task<IEnumerable<string>> GetProductsAsync()
         {
-            return new[]
-            {
-                "Product One",
-                "Product Two",
-                "No subcases"
-            };
-        }
-        public string GetReportLink(string product)
-        {
-            var template = @"https://www.google.com/search";
-            return QueryHelpers.AddQueryString(template, "q", product);
+            return Task<IEnumerable<string>>.Run(() => {
+                return (IEnumerable<string>)new[] 
+                { 
+                    "Product One", 
+                    "Product Two", 
+                    "No subcases" };
+            });
         }
 
         public Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
@@ -63,6 +59,12 @@ namespace Armadillo.Data
                     Loaded = DateTime.UtcNow - TimeSpan.FromMinutes(rng.Next(0, 3))
                 });
             });
+        }
+
+        public string GetReportLink(string product)
+        {
+            var template = @"https://www.google.com/search";
+            return QueryHelpers.AddQueryString(template, "q", product);
         }
     }
 }

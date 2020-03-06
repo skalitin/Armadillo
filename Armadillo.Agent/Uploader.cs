@@ -42,7 +42,7 @@ namespace Armadillo.Agent
 
         public async Task UpdateAsync()
         {
-            var productNames = _dataProdiver.GetProducts();
+            var productNames = await _dataProdiver.GetProductsAsync();
             foreach(var productName in productNames)
             {
                 try

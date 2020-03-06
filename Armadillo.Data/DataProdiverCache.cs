@@ -33,14 +33,9 @@ namespace Armadillo.Data
             _cache = new Dictionary<string, CachedSubcases>();
         }
 
-        public IEnumerable<string> GetProducts()
+        public async Task<IEnumerable<string>> GetProductsAsync()
         {
-            return _dataProdiver.GetProducts();
-        }
-
-        public string GetReportLink(string product)
-        {
-            return _dataProdiver.GetReportLink(product);
+            return await _dataProdiver.GetProductsAsync();
         }
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
@@ -66,6 +61,11 @@ namespace Armadillo.Data
             _cache[product] = new CachedSubcases(subcases);
 
             return subcases;
+        }
+        
+        public string GetReportLink(string product)
+        {
+            return _dataProdiver.GetReportLink(product);
         }
     }
 }

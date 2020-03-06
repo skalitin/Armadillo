@@ -1,5 +1,8 @@
 ﻿@page "/"
+@page "/{ProductNameParameter}"
+
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 @using Armadillo.Chart
 @using Armadillo.Shared
@@ -9,40 +12,46 @@
 @using Microsoft.AspNetCore.WebUtilities
 
 <div class="settings">
-<div class="select-wrapper">
-    <select @bind="@ProductName">
-        @foreach (var item in ProductNames)
-        {
-            <option value="@item">@item</option>
-        }
-    </select>
-</div>
 
-<label class="checkbox-container" for="show-customers">Show customers
-    <input type="checkbox" @bind="@ShowCustomers" id="show-customers"/>
-    <span class="checkmark"></span>
-</label>
+    <div class="select-wrapper">
+        <select @bind="@ProductName">
+            @foreach (var item in ProductNames)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+    </div>
 
-<label class="checkbox-container" for="show-owners">Show owners
-    <input type="checkbox" @bind="@ShowOwners" id="show-owners"/>
-    <span class="checkmark"></span>
-</label>
+    <label class="checkbox-container" for="show-customers">Show customers
+        <input type="checkbox" @bind="@ShowCustomers" id="show-customers"/>
+        <span class="checkmark"></span>
+    </label>
 
-<label class="checkbox-container" for="show-graph">Graph
-    <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
-    <span class="checkmark"></span>
-</label>
+    <label class="checkbox-container" for="show-owners">Show owners
+        <input type="checkbox" @bind="@ShowOwners" id="show-owners"/>
+        <span class="checkmark"></span>
+    </label>
+
+    <label class="checkbox-container" for="show-graph">Graph
+        <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
+        <span class="checkmark"></span>
+    </label>
 
 @if (ProductSubcases != null)
 {
     <a target="_blank" href="@ProductSubcases.ReportLink" class="report-link">Detailed report...</a>
 }
+
 </div>
 
 <div class="content">
-@if (ProductSubcases == null)
+@if (!ProductNames.Any())
 {
-    <h1>Loading...</h1>
+    <h1>Loading products...</h1>
+}
+else if (ProductSubcases == null)
+{
+    <h1>Loading subcases...</h1>
 }
 else
 {
@@ -76,18 +85,37 @@ else
 
 @code {
     private Timer timer_ = new Timer(1000 * 60 * 30);
-    private IEnumerable<string> ProductNames { get; set; } = new string[]{};
+    private IList<string> ProductNames { get; set; } = new List<string>();
     
     private string productName_;
     private string ProductName
     { 
         get
         {  
-             return productName_;
+            return productName_;
         }
         set
         {
-            productName_ = value;
+            if(productName_ != value)
+            {
+                productName_ = value;
+                NavigationManager.NavigateTo($"/{ProductName}");
+            }
+        }
+    }
+
+    [Parameter]
+    public string ProductNameParameter
+    { 
+        set
+        {
+            if(!ProductNames.Any())
+            {
+                ProductNames.Add(value);
+            }
+
+            ProductName = value;
+            
             ReloadSubcases();
         }
     }
@@ -99,8 +127,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ProductNames = await Http.GetJsonAsync<IEnumerable<string>>("api/products");
-        ProductName = ProductNames.FirstOrDefault();
+        var products = await Http.GetJsonAsync<IEnumerable<string>>("api/products");
+        foreach(var product in products)    
+        {
+            if(product != ProductName)
+            {
+                ProductNames.Add(product);
+            }
+        }
+
+        ProductName = String.IsNullOrEmpty(ProductName) ? ProductNames.FirstOrDefault() : ProductName;
         
         timer_.Elapsed += (sender, e) => ReloadSubcases();
         timer_.Enabled = true;
