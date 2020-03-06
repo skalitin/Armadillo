@@ -92,7 +92,13 @@ namespace Armadillo.Data
                     throw new ApplicationException(message);	
                 }
 
-                return (IEnumerable<string>)new[]{"foo", "bar"};
+                var nodes = wrapperNode.SelectNodes("table/tr/td/span/label");
+                
+                // First two elements are "(Select All)" and " All"
+                var products = nodes.Select(each => each.InnerText.Replace("&nbsp;", " ")).Skip(2);
+                
+                _logger.LogDebug("Parsed products: {products}", products);
+                return products;
 
             }
             catch (XmlException exception)

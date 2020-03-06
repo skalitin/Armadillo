@@ -63,9 +63,6 @@ namespace Armadillo.Data.Tests
                 .Setup(o => o.GetReportAsync(It.IsAny<string>()))
                 .ReturnsAsync(report);
 
-            var products = await _dataProvider.GetProductsAsync();
-            CollectionAssert.AreEquivalent(new string[] {}, products);
-
             var subcases = (await _dataProvider.GetSubcasesAsync("MyProduct")).ToArray();
             Assert.AreEqual(0, subcases.Length);
         }
@@ -79,7 +76,7 @@ namespace Armadillo.Data.Tests
                 .ReturnsAsync(report);
 
             var products = await _dataProvider.GetProductsAsync();
-            CollectionAssert.Contains(products, "InTrust");
+            Assert.AreEqual("InTrust", products.First());
             CollectionAssert.Contains(products, "Recovery Manager for AD");
         }
 
