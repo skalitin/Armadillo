@@ -8,8 +8,8 @@ namespace Armadillo.Data
 {
     public interface ISubcaseDataProdiver
     {
-        IEnumerable<string> GetProducts();
-        string GetReportLink(string product);
+        Task<IEnumerable<string>> GetProductsAsync();
         Task<IEnumerable<Subcase>> GetSubcasesAsync(string product);
+        string GetReportLink(string product);
     }
 }

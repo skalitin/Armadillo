@@ -21,16 +21,16 @@ namespace Armadillo.Data.Tests
             _dataProviderCache = new DataProdiverCache(_mockDataProvider.Object, null, TimeSpan.FromSeconds(1));
         }
 
-        [Test]
-        public void ProductListIsNotCached()
-        {
-            var products = new[]{ "product one", "product two" };
-            _mockDataProvider
-                .Setup(o => o.GetProducts())
-                .Returns(products);
+        // [Test]
+        // public void ProductListIsNotCached()
+        // {
+        //     var products = new[]{ "product one", "product two" };
+        //     _mockDataProvider
+        //         .Setup(o => o.GetProducts())
+        //         .Returns(products);
             
-            var result = _dataProviderCache.GetProducts();
-            Assert.AreEqual(products, result);
-        }
+        //     var result = _dataProviderCache.GetProducts();
+        //     Assert.AreEqual(products, result);
+        // }
     }
 }

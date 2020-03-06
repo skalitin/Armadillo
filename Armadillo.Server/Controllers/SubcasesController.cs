@@ -22,10 +22,10 @@ namespace Armadillo.Server.Controllers
         }
 
         [HttpGet("products")]
-        public IEnumerable<string> Products()
+        public async Task<IEnumerable<string>> Products()
         {   
             logger_.LogInformation("Loading products...");
-            return dataProdiver_.GetProducts();
+            return await dataProdiver_.GetProductsAsync();
         }
 
         [HttpGet("subcases")]

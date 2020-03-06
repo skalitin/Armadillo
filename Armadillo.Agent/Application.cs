@@ -86,7 +86,7 @@ namespace Armadillo.Agent
         private async Task TestReadSubcasesAsync(DocumentClient documentClient)
         {
             var cosmosDataProvider = new CosmosDataProvider(documentClient, _loggerFactory.CreateLogger("CosmosDataProvider"));
-            var products = cosmosDataProvider.GetProducts();
+            var products = await cosmosDataProvider.GetProductsAsync();
             foreach(var product in products)
             {
                 _logger.LogInformation($"Read product {product}");

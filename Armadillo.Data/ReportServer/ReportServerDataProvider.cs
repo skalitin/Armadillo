@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System.Xml;
 using System.Globalization;
+using HtmlAgilityPack;
 
 namespace Armadillo.Data
 {
@@ -35,9 +36,9 @@ namespace Armadillo.Data
             var page = await GetReportAsync(url);
             try
             {
-                var nodes = XDocument.Parse(page).Root?.Descendants().Elements()
-                    .Where(e => e.Name.LocalName == "Details").ToArray();
+                var nodes = XDocument.Parse(page).Root?.Descendants().Elements().Where(e => e.Name.LocalName == "Details").ToArray();
                 _logger.LogDebug("Rows: {Count}", nodes?.Length ?? 0);
+
                 return nodes?.Select(e => new Subcase
                 {
                     Id = e.Attribute("COL_NUM")?.Value,
@@ -68,27 +69,38 @@ namespace Armadillo.Data
         {
             var template = ReportServerUrl + 
                 @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=" + 
-                (format == ReportFormat.HTML ? "HTML4.0" : "XML") + 
-                @"&rc:LinkTarget=_top&rc:Javascript=false&rc:Toolbar=false";
+                (format == ReportFormat.HTML ? "HTML4.0" : "XML") + @"&rc:LinkTarget=_top&rc:Javascript=false";
 
-            return QueryHelpers.AddQueryString(template, "Products", product);
+            return String.IsNullOrEmpty(product) ? template : QueryHelpers.AddQueryString(template, "Products", product);
         }
 
-        public IEnumerable<string> GetProducts()
+        public async Task<IEnumerable<string>> GetProductsAsync()
         {
-            return new[]
+            var url = GetReportLink(product: null, ReportFormat.HTML);
+            var page = await GetReportAsync(url);
+            try
             {
-                "Recovery Manager for AD",
-                "Recovery Manager for Exchange",
-                "OnDemand Migration for Email",
-                "InTrust",
-                "IT Search",
-                "LiteSpeed for SQL Server",
-                "Migration Manager for AD",
-                "Migration Manager for Exchange",
-                "On Demand Migration: On Demand Migration – Azure",
-                "On Demand Recovery"
-            };
+                var htmlDoc = new HtmlDocument();	
+                htmlDoc.LoadHtml(page);	
+
+                var htmlBody = htmlDoc.DocumentNode;	
+                var wrapperNode = htmlBody.SelectSingleNode("//div[@id='ReportViewerControl_ctl04_ctl05_divDropDown']");
+                
+                if(wrapperNode == null) {	
+                    var message = "Cannot parse HTML report, incorrect format.";	
+                    _logger.LogError(message);	
+                    throw new ApplicationException(message);	
+                }
+
+                return (IEnumerable<string>)new[]{"foo", "bar"};
+
+            }
+            catch (XmlException exception)
+            {
+                const string message = "Cannot parse HTML report, incorrect format.";
+                _logger.LogError(exception, message);
+                throw new ApplicationException(message);
+            }
         }
 
         private async Task<string> GetReportAsync(string url)

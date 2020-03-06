@@ -21,27 +21,19 @@ namespace Armadillo.Data
             _logger = logger;
         }
 
-        public IEnumerable<string> GetProducts()
+        public async Task<IEnumerable<string>> GetProductsAsync()
         {
             _logger.LogInformation($"Get products");
 
-            var products = GetProductsAsync().Result;
+            var products = await GetProductDataAsync();
             return products.Select(each => each.Name);
-        }
-
-        public string GetReportLink(string product)
-        {
-            _logger.LogInformation($"Get report link");
-
-            var products = GetProductsAsync().Result;
-            return products.First(each => each.Name == product).ReportLink;
         }
 
         public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string productName)
         {
             _logger.LogInformation($"Loading subcases for {productName}");
 
-            var products = (await GetProductsAsync()).ToArray();
+            var products = (await GetProductDataAsync()).ToArray();
             _logger.LogInformation($"Loaded products: {products.Count()}");
 
             var product = products.First(each => each.Name == productName);
@@ -50,7 +42,15 @@ namespace Armadillo.Data
             return product.Subcases;
         }
 
-        public Task<IEnumerable<Product>> GetProductsAsync()
+        public string GetReportLink(string product)
+        {
+            _logger.LogInformation($"Get report link");
+
+            var products = GetProductDataAsync().Result;
+            return products.First(each => each.Name == product).ReportLink;
+        }
+        
+        public Task<IEnumerable<Product>> GetProductDataAsync()
         {
             _logger.LogInformation($"Loading products");
 
