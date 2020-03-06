@@ -130,7 +130,10 @@ else
         var products = await Http.GetJsonAsync<IEnumerable<string>>("api/products");
         foreach(var product in products)    
         {
-            ProductNames.Add(product);
+            if(product != ProductName)
+            {
+                ProductNames.Add(product);
+            }
         }
 
         ProductName = String.IsNullOrEmpty(ProductName) ? ProductNames.FirstOrDefault() : ProductName;
