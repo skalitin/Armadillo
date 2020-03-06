@@ -22,7 +22,7 @@ namespace Armadillo.Agent
             var application = serviceProvider.GetService<Application>();
             application.StartMonitoring();
 
-            Console.ReadKey();
+            Console.Read();
         }
 
         private static void ConfigureServices(IServiceCollection services)
