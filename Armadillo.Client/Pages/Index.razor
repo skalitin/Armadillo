@@ -109,14 +109,16 @@ else
     { 
         set
         {
-            if(!ProductNames.Any())
+            if(!String.IsNullOrEmpty(value))
             {
-                ProductNames.Add(value);
-            }
+                if(!ProductNames.Any())
+                {
+                    ProductNames.Add(value);
+                }
 
-            ProductName = value;
-            
-            ReloadSubcases();
+                ProductName = value;
+                ReloadSubcases();
+            }
         }
     }
 
