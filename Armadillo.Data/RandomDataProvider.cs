@@ -12,12 +12,11 @@ namespace Armadillo.Data
     {        
         public Task<IEnumerable<string>> GetProductsAsync()
         {
+            var rng = new Random();
             return Task<IEnumerable<string>>.Run(() => {
-                return (IEnumerable<string>)new[] 
-                { 
-                    "Product One", 
-                    "Product Two", 
-                    "No subcases" };
+                var result = Enumerable.Range(1, rng.Next(2, 5)).Select(index => $"Product {index}").ToList();
+                result.Add("Product X - No subcases");
+                return (IEnumerable<string>)result;
             });
         }
 
@@ -25,7 +24,7 @@ namespace Armadillo.Data
         {
             return Task<IEnumerable<Subcase>>.Run(() => {
 
-                if(product == "No subcases") 
+                if(product.Contains("No subcases")) 
                 {
                     return new List<Subcase>();
                 }

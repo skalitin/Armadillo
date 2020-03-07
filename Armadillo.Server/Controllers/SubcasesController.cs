@@ -25,7 +25,8 @@ namespace Armadillo.Server.Controllers
         public async Task<IEnumerable<string>> Products()
         {   
             logger_.LogInformation("Loading products...");
-            return await dataProdiver_.GetProductsAsync();
+            var products = await dataProdiver_.GetProductsAsync();
+            return products.OrderBy(each => each);
         }
 
         [HttpGet("subcases")]
