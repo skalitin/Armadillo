@@ -36,12 +36,6 @@
         <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
         <span class="checkmark"></span>
     </label>
-
-@if (ProductSubcases != null)
-{
-    <a target="_blank" href="@ProductSubcases.ReportLink" class="report-link">Detailed report...</a>
-}
-
 </div>
 
 <div class="content">
@@ -76,6 +70,10 @@ else
             }
             else
             {
+                if (ProductSubcases != null)
+                {
+                    <a target="_blank" href="@ProductSubcases.ReportLink" class="report-link">Data Source</a>
+                }
                 <SubcaseList Product=@ProductSubcases ShowCustomers=@ShowCustomers ShowOwners=@ShowOwners/>
             }
         </div>

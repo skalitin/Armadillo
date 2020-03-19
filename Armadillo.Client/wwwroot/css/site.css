@@ -16,7 +16,6 @@ app {
 
 .settings {
     min-width: 300px;
-    flex-basis: 300px;
     display: flex;
     flex-direction: column;
     padding: 2em;
@@ -25,10 +24,10 @@ app {
 
 .content {
     flex-grow: 1;
-    padding: 2em;
+    padding: 1em;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: start;
 }
 
 .subcase-content {
@@ -36,7 +35,7 @@ app {
 }
 
 .report-link {
-    padding-top: 1em;
+    margin-top: 1em;
 }
 
 /* Select */
@@ -130,12 +129,11 @@ app {
 
 @media (max-width: 900px) {
     .main {
-        flex-wrap: wrap;
+        flex-direction: column;
     }
 
-    .settings,
-    .content {
-        padding: 1em;
+    .settings, .content {
+        padding: .5em;
     }
 
     .report-link {
