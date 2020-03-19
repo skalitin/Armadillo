@@ -16,6 +16,7 @@ app {
 
 .settings {
     min-width: 300px;
+    max-width: 300px;
     display: flex;
     flex-direction: column;
     padding: 2em;
