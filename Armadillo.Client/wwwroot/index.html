@@ -5,17 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Subcases</title>
     <base href="/" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/site.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/site.css" rel="stylesheet"/>
+    
+    <link href="_content/Armadillo.Graph/css/styles.css" rel="stylesheet"></link>
+    <link href="_content/Armadillo.Graph/css/vis-network.min.css" rel="stylesheet"></link>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-<app>Loading...</app>
+    <app>Loading...</app>
+        
+    <script>
+        setInterval(() => fetch('/.auth/refresh'), 60000 * 5 ) 
+    </script>
     
-<script>
-    setInterval(() => fetch('/.auth/refresh'), 60000 * 5 ) 
-</script>
+    <script src="_content/Armadillo.Graph/network.js"></script>
+    <script src="_content/Armadillo.Graph/vis-network.min.js"></script>
     
-<script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>
