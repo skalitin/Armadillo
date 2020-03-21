@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>7.3</LangVersion>
     <UserSecretsId>28e6f711-a4c4-4cef-9e37-50ebfee35f91</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/69df5688-63b8-4bc4-8cf1-f4014ed4f928/resourcegroups/subcase-monitor/providers/microsoft.insights/components/SubcaseMonitor</ApplicationInsightsResourceId>
@@ -10,13 +10,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Server" Version="3.0.0-preview9.19465.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0-preview2.20160.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Armadillo.Client\Armadillo.Client.csproj" />
+    <ProjectReference Include="..\Armadillo.Client\Armadillo.Client.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\Armadillo.Shared\Armadillo.Shared.csproj" />
     <ProjectReference Include="..\Armadillo.Data\Armadillo.Data.csproj" />
   </ItemGroup>
