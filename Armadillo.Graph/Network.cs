@@ -1,6 +1,6 @@
 using System;
 
-namespace Armadillo.Chart
+namespace Armadillo.Graph
 {
     public class NodeColor
     {
