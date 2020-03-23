@@ -1,3 +1,38 @@
+function RenderStatistics(slices) {
+  console.log(slices);
+   
+   let data = slices.map(each => {
+        return {
+            x: "Level " + each.level,
+            value: each.count,
+            fill: each.color,
+            label: {enabled:true, fontColor: "black", fontSize: 20, format:"{%value}"}                    
+        };
+   });
+  
+  let chart = anychart.pie();
+  chart.data(data);
+  
+  chart.innerRadius("60%");
+  // chart.overlapMode(true)
+  // chart.labels().position("inside");
+  // chart.insideLabelsOffset("-25%");
+
+  let subcaseCount = slices.reduce((total, value) => { return total + value.count }, 0);
+  let label = anychart.standalones.label();
+  label.text(subcaseCount);
+  label.fontColor("black");
+  label.fontSize(40);
+  label.width("100%");
+  label.height("100%");
+  label.hAlign("center");
+  label.vAlign("middle");
+  chart.center().content(label);
+  
+  chart.container("doughnut-wrapper");
+  chart.draw();
+}
+
 function RenderNetwork(network) {
     var nodes = new vis.DataSet(network.nodes);
     var edges = new vis.DataSet(network.edges);

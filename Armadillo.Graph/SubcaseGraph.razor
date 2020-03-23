@@ -6,7 +6,10 @@
 @using System.Collections.Generic
 @inject IJSRuntime JsRuntime;
 
-<div id="network-wrapper"/>
+<div class="graph-container">
+    <div id="network-wrapper"/>
+    <div id="doughnut-wrapper"/>
+</div>
 
 @code {
     [Parameter]
@@ -21,6 +24,11 @@
     public async Task RenderNetworkAsync(Network network)
     {
         await JsRuntime.InvokeAsync<string>("RenderNetwork", network);
+    } 
+
+    public async Task RenderStatisticsAsync(IEnumerable<Slice> slices)
+    {
+        await JsRuntime.InvokeAsync<string>("RenderStatistics", slices);
     } 
 
     private string TruncateString(string value, int maxChars)
@@ -42,19 +50,37 @@
             $"{subcase.Title}";
     }
 
-    private string GetColor(int level, string status)
+    private NodeColor GetColor(Subcase subcase, int level)
     {
-        if(level == 1)
+        // Source https://www.w3schools.com/colors/colors_trends.asp
+        var colors = new Dictionary<int, string>
         {
-            return "maroon";
+            {1, "#9B2335"},
+            {2, "#EFC050"},
+            {3, "#5B5EA6"},
+            {4, "#DFCFBE"},
+        };
+
+        var result = new NodeColor( colors[level] );
+        if(subcase == null)
+        {
+            return result;
         }
 
-        if(status == "Fix Provided")
+        if(DateTime.UtcNow - subcase.Created > TimeSpan.FromDays(30))
         {
-            return "green";
+            result.Border = "#E15D44";
+        }
+        else if (subcase.Status == "Update from Support")
+        {
+            result.Border = "#98B4D4";
+        }
+        else if (subcase.Status == "Fix Provided")
+        {
+            result.Border = "#009B77";
         }
 
-        return status == "Update from Support" ? "orange" : "olive";
+        return result;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -66,30 +92,39 @@
         }
 
         var subcases = Product.Subcases;
+        var slices = new Dictionary<int, Slice>
+        {
+            {1, new Slice(1, 0, GetColor(null, 1).Background)},
+            {2, new Slice(2, 0, GetColor(null, 2).Background)},
+            {3, new Slice(3, 0, GetColor(null, 3).Background)},
+            {4, new Slice(4, 0, GetColor(null, 4).Background)}
+        };
 
-        var nodes = subcases
-            .Select(each => 
-            {
-                var level = Int32.Parse(each.Level);
-                var node =  new Node(each.Id, each.Id)
-                {
-                    Title = GetTitle(each),
-                    Value = 4 - level
-                };
-
-                var color = new NodeColor(GetColor(level, each.Status));
-                if(DateTime.UtcNow - each.Created > TimeSpan.FromDays(30))
-                {
-                    color.Border = "red";
-                    node.BorderWidth = 5;
-                }
-
-                node.Color = color;    
-                return node;
-            })
-            .ToList();
-        var edges = new List<Edge>();
+        var nodes = new List<Node>();
         
+        foreach(var each in subcases) 
+        {
+            var level = Int32.Parse(each.Level);
+            var node =  new Node(each.Id, each.Id)
+            {
+                Title = GetTitle(each),
+                Value = Math.Max(5, (int)((DateTime.UtcNow - each.Created).TotalDays) / 6)
+            };
+
+            node.Color = GetColor(each, level);    
+            node.BorderWidth = String.IsNullOrEmpty(node.Color.Border) ? 0 : 5;
+            nodes.Add(node);
+
+            Slice slice = null;
+            if(!slices.TryGetValue(level, out slice))
+            {
+                slice = new Slice(level, 0);
+                slices.Add(level, slice);
+            }
+            slice.Count++;
+        }
+        
+        var edges = new List<Edge>();
         if(ShowCustomers)
         {
             var customers = subcases.GroupBy(each => each.Customer,
@@ -133,5 +168,6 @@
         };
 
         await RenderNetworkAsync(network);
+        await RenderStatisticsAsync(slices.Values);
     }
 }
