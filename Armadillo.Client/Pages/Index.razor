@@ -36,6 +36,14 @@
         <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
         <span class="checkmark"></span>
     </label>
+
+    <div class="statistics-wrapper">
+        <LevelStatistics Product=@ProductSubcases/>
+    </div>
+
+    <div class="statistics-wrapper">
+        <StatusStatistics Product=@ProductSubcases/>
+    </div>
 </div>
 
 <div class="content">

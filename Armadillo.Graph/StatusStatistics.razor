@@ -1,0 +1,40 @@
+﻿@using Armadillo.Graph
+@using Microsoft.JSInterop
+@using System.Threading.Tasks
+@using Armadillo.Shared
+@using System.Linq
+@using System.Collections.Generic
+@inject IJSRuntime JsRuntime;
+
+<div id="status-statistics-container" class="statistics-container"/>
+
+@code {
+    [Parameter]
+    public Product Product { get; set; }
+   
+    private async Task RenderStatisticsAsync(IEnumerable<StatusStatisticsSlice> slices)
+    {
+        await JsRuntime.InvokeAsync<string>("RenderStatusStatistics", slices);
+    } 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(Product == null)
+        {
+            await RenderStatisticsAsync(new StatusStatisticsSlice[]{});
+            return;
+        }
+
+        var statuses = Product.Subcases.GroupBy(each => each.Status,
+            each => each, 
+            (key, group) => new { Status = key, Subcases = group});
+            
+        var slices = new List<StatusStatisticsSlice>();
+        foreach (var item in statuses)
+        {
+            slices.Add(new StatusStatisticsSlice(item.Status, item.Subcases.Count()));
+        }
+       
+        await RenderStatisticsAsync(slices.ToArray());
+    }
+}

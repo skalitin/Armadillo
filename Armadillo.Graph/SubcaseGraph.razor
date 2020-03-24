@@ -6,10 +6,7 @@
 @using System.Collections.Generic
 @inject IJSRuntime JsRuntime;
 
-<div class="graph-container">
-    <div id="network-wrapper"/>
-    <div id="doughnut-wrapper"/>
-</div>
+<div id="network-wrapper"/>
 
 @code {
     [Parameter]
@@ -21,14 +18,9 @@
     [Parameter]
     public bool ShowOwners { get; set; }
 
-    public async Task RenderNetworkAsync(Network network)
+    private async Task RenderNetworkAsync(Network network)
     {
         await JsRuntime.InvokeAsync<string>("RenderNetwork", network);
-    } 
-
-    public async Task RenderStatisticsAsync(IEnumerable<Slice> slices)
-    {
-        await JsRuntime.InvokeAsync<string>("RenderStatistics", slices);
     } 
 
     private string TruncateString(string value, int maxChars)
@@ -50,39 +42,6 @@
             $"{subcase.Title}";
     }
 
-    private NodeColor GetColor(Subcase subcase, int level)
-    {
-        // Source https://www.w3schools.com/colors/colors_trends.asp
-        var colors = new Dictionary<int, string>
-        {
-            {1, "#9B2335"},
-            {2, "#EFC050"},
-            {3, "#5B5EA6"},
-            {4, "#DFCFBE"},
-        };
-
-        var result = new NodeColor( colors[level] );
-        if(subcase == null)
-        {
-            return result;
-        }
-
-        if(DateTime.UtcNow - subcase.Created > TimeSpan.FromDays(30))
-        {
-            result.Border = "#E15D44";
-        }
-        else if (subcase.Status == "Update from Support")
-        {
-            result.Border = "#98B4D4";
-        }
-        else if (subcase.Status == "Fix Provided")
-        {
-            result.Border = "#009B77";
-        }
-
-        return result;
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(Product == null)
@@ -92,36 +51,19 @@
         }
 
         var subcases = Product.Subcases;
-        var slices = new Dictionary<int, Slice>
-        {
-            {1, new Slice(1, 0, GetColor(null, 1).Background)},
-            {2, new Slice(2, 0, GetColor(null, 2).Background)},
-            {3, new Slice(3, 0, GetColor(null, 3).Background)},
-            {4, new Slice(4, 0, GetColor(null, 4).Background)}
-        };
-
         var nodes = new List<Node>();
         
         foreach(var each in subcases) 
         {
-            var level = Int32.Parse(each.Level);
             var node =  new Node(each.Id, each.Id)
             {
                 Title = GetTitle(each),
                 Value = Math.Max(5, (int)((DateTime.UtcNow - each.Created).TotalDays) / 6)
             };
 
-            node.Color = GetColor(each, level);    
+            node.Color = new NodeColor(each);
             node.BorderWidth = String.IsNullOrEmpty(node.Color.Border) ? 0 : 5;
             nodes.Add(node);
-
-            Slice slice = null;
-            if(!slices.TryGetValue(level, out slice))
-            {
-                slice = new Slice(level, 0);
-                slices.Add(level, slice);
-            }
-            slice.Count++;
         }
         
         var edges = new List<Edge>();
@@ -168,6 +110,5 @@
         };
 
         await RenderNetworkAsync(network);
-        await RenderStatisticsAsync(slices.Values);
     }
 }
