@@ -18,7 +18,7 @@
     [Parameter]
     public bool ShowOwners { get; set; }
 
-    public async Task RenderNetworkAsync(Network network)
+    private async Task RenderNetworkAsync(Network network)
     {
         await JsRuntime.InvokeAsync<string>("RenderNetwork", network);
     } 
@@ -42,21 +42,6 @@
             $"{subcase.Title}";
     }
 
-    private string GetColor(int level, string status)
-    {
-        if(level == 1)
-        {
-            return "maroon";
-        }
-
-        if(status == "Fix Provided")
-        {
-            return "green";
-        }
-
-        return status == "Update from Support" ? "orange" : "olive";
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(Product == null)
@@ -66,30 +51,22 @@
         }
 
         var subcases = Product.Subcases;
-
-        var nodes = subcases
-            .Select(each => 
-            {
-                var level = Int32.Parse(each.Level);
-                var node =  new Node(each.Id, each.Id)
-                {
-                    Title = GetTitle(each),
-                    Value = 4 - level
-                };
-
-                var color = new NodeColor(GetColor(level, each.Status));
-                if(DateTime.UtcNow - each.Created > TimeSpan.FromDays(30))
-                {
-                    color.Border = "red";
-                    node.BorderWidth = 5;
-                }
-
-                node.Color = color;    
-                return node;
-            })
-            .ToList();
-        var edges = new List<Edge>();
+        var nodes = new List<Node>();
         
+        foreach(var each in subcases) 
+        {
+            var node =  new Node(each.Id, each.Id)
+            {
+                Title = GetTitle(each),
+                Value = Math.Max(5, (int)((DateTime.UtcNow - each.Created).TotalDays) / 6)
+            };
+
+            node.Color = new NodeColor(each);
+            node.BorderWidth = String.IsNullOrEmpty(node.Color.Border) ? 0 : 5;
+            nodes.Add(node);
+        }
+        
+        var edges = new List<Edge>();
         if(ShowCustomers)
         {
             var customers = subcases.GroupBy(each => each.Customer,

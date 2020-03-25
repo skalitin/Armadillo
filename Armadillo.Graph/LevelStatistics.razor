@@ -1,0 +1,51 @@
+﻿@using Armadillo.Graph
+@using Microsoft.JSInterop
+@using System.Threading.Tasks
+@using Armadillo.Shared
+@using System.Linq
+@using System.Collections.Generic
+@inject IJSRuntime JsRuntime;
+
+<div id="level-statistics-container" class="statistics-container"/>
+
+@code {
+    [Parameter]
+    public Product Product { get; set; }
+   
+    private async Task RenderStatisticsAsync(IEnumerable<LevelStatisticsSlice> slices, string comment)
+    {
+        await JsRuntime.InvokeAsync<string>("RenderLevelStatistics", slices, comment);
+    } 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(Product == null)
+        {
+            await RenderStatisticsAsync(new LevelStatisticsSlice[]{}, "");
+            return;
+        }
+
+        var slices = new []
+        {
+            new LevelStatisticsSlice(1),
+            new LevelStatisticsSlice(2),
+            new LevelStatisticsSlice(3),
+            new LevelStatisticsSlice(4)
+        };
+       
+        foreach(var each in Product.Subcases)
+        {
+            var level = Int32.Parse(each.Level);
+            slices[level - 1].Count++;
+        }
+        
+        var updatedText = "";
+        if(Product.HasLoadedTime)
+        {
+            var updated = (int)((DateTime.UtcNow - Product.Loaded).TotalMinutes);
+            updatedText = updated == 0 ? "Updated less than a minute ago." : "Updated " + updated + " minutes ago.";
+        }
+
+        await RenderStatisticsAsync(slices, updatedText);
+    }
+}

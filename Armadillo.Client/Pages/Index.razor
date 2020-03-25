@@ -36,6 +36,14 @@
         <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
         <span class="checkmark"></span>
     </label>
+
+    <div class="statistics-wrapper">
+        <LevelStatistics Product=@ProductSubcases/>
+    </div>
+
+    <div class="statistics-wrapper">
+        <StatusStatistics Product=@ProductSubcases/>
+    </div>
 </div>
 
 <div class="content">
@@ -55,14 +63,6 @@ else
     }
     else
     {
-        var updatedText = "";
-        if(ProductSubcases.HasLoadedTime)
-        {
-            var updated = (int)((DateTime.UtcNow - ProductSubcases.Loaded).TotalMinutes);
-            updatedText = updated == 0 ? ", updated less than a minute ago" : ", updated " + updated + " minutes ago";
-        }
-
-        <h4>@ProductSubcases.Subcases.Length subcases @updatedText</h4>
         <div class="subcase-content">
             @if(ShowGraph)
             {
