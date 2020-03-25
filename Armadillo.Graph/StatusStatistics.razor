@@ -21,6 +21,7 @@
     {
         if(Product == null || !Product.Subcases.Any())
         {
+            await RenderStatisticsAsync(new StatusStatisticsSlice[]{});
             return;
         }
 
