@@ -33,6 +33,7 @@ namespace Armadillo.Data
                 var max = rng.Next(10, 15);
                 var statuses = new[]
                 {
+                    "New",
                     "Waiting Support Response",
                     "Fix Provided",
                     "Investigating",

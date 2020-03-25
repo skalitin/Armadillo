@@ -12,16 +12,16 @@
     [Parameter]
     public Product Product { get; set; }
    
-    private async Task RenderStatisticsAsync(IEnumerable<LevelStatisticsSlice> slices)
+    private async Task RenderStatisticsAsync(IEnumerable<LevelStatisticsSlice> slices, string comment)
     {
-        await JsRuntime.InvokeAsync<string>("RenderLevelStatistics", slices);
+        await JsRuntime.InvokeAsync<string>("RenderLevelStatistics", slices, comment);
     } 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(Product == null)
         {
-            await RenderStatisticsAsync(new LevelStatisticsSlice[]{});
+            await RenderStatisticsAsync(new LevelStatisticsSlice[]{}, "");
             return;
         }
 
@@ -39,6 +39,13 @@
             slices[level - 1].Count++;
         }
         
-        await RenderStatisticsAsync(slices);
+        var updatedText = "";
+        if(Product.HasLoadedTime)
+        {
+            var updated = (int)((DateTime.UtcNow - Product.Loaded).TotalMinutes);
+            updatedText = updated == 0 ? "Updated less than a minute ago." : "Updated " + updated + " minutes ago.";
+        }
+
+        await RenderStatisticsAsync(slices, updatedText);
     }
 }

@@ -19,20 +19,22 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(Product == null)
+        if(Product == null || !Product.Subcases.Any())
         {
-            await RenderStatisticsAsync(new StatusStatisticsSlice[]{});
             return;
         }
 
-        var statuses = Product.Subcases.GroupBy(each => each.Status,
+        var statuses = Product.Subcases
+            .Select(each => new NodeColor(each))
+            .Where(each => !String.IsNullOrEmpty(each.Importance))
+            .GroupBy(each => (each.Importance, each.Border),
             each => each, 
-            (key, group) => new { Status = key, Subcases = group});
+            (key, group) => new { Key = key, Subcases = group});
             
         var slices = new List<StatusStatisticsSlice>();
         foreach (var item in statuses)
         {
-            slices.Add(new StatusStatisticsSlice(item.Status, item.Subcases.Count()));
+            slices.Add(new StatusStatisticsSlice(item.Key.Importance, item.Key.Border, item.Subcases.Count()));
         }
        
         await RenderStatisticsAsync(slices.ToArray());

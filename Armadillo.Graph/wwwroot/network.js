@@ -28,7 +28,7 @@ function RenderStatusStatistics(slices) {
         window.status_statistics_chart = chart;
     }
 
-    chart.title("Subcases by status");
+    chart.title("Subcases that need attention");
 
     chart.data(data);
     chart.innerRadius("60%");
@@ -44,7 +44,7 @@ function RenderStatusStatistics(slices) {
     chart.draw();  
 }
 
-function RenderLevelStatistics(slices) {
+function RenderLevelStatistics(slices, comment) {
   
    let data = slices.map(each => {
         return {
@@ -61,7 +61,7 @@ function RenderLevelStatistics(slices) {
       window.level_statistics_chart = chart;
    }
   
-  chart.title("Subcases by level");
+  chart.title("Subcases by level." + " " + comment);
 
   chart.data(data);
   chart.innerRadius("60%");
@@ -91,7 +91,7 @@ function RenderNetwork(network) {
         },      
         nodes: {
           shadow: true,
-          // shapeProperties:{borderDashes:[10, 10]}
+          //shapeProperties:{borderDashes:[10, 10]}
           // borderWidth: 2,
           // scaling: {
           //   customScalingFunction: function (min, max, total, value) {

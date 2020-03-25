@@ -5,28 +5,18 @@ namespace Armadillo.Graph
 {
     public class StatusStatisticsSlice
     {
-        public StatusStatisticsSlice(string status, int count = 0)
+        public StatusStatisticsSlice(string status, string color, int count = 0)
         {
             Status = status;
+            Color = color;
             Count = count;
         }
 
         public string Status { get; set; }
 
-        public int Count { get; set; }
+        public string Color { get; set; }
 
-        public string Color
-        {
-            get
-            {
-                return new NodeColor(new Subcase
-                {
-                    Level = "3",
-                    Created = DateTime.UtcNow,
-                    Status = Status 
-                }).Border;
-            }
-        }
+        public int Count { get; set; }
     }
 }
 

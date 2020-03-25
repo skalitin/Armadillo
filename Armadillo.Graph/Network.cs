@@ -11,34 +11,31 @@ namespace Armadillo.Graph
             // Source https://www.w3schools.com/colors/colors_trends.asp
             var colors = new Dictionary<string, string>
             {
-                {"1", "#9B2335"},
-                {"2", "#EFC050"},
-                {"3", "#5B5EA6"},
-                {"4", "#DFCFBE"},
+                {"1", "#9B2335"}, // Chili Pepper
+                {"2", "#EFC050"}, // Mimosa
+                {"3", "#5B5EA6"}, // Blue Izis
+                {"4", "#DFCFBE"}, // Sand Dollar
             };
 
             Background = colors[subcase.Level];
 
             var borders = new Dictionary<string, string>
             {
-                {"Update from Support", "#98B4D4"},
-                {"Fix Provided", "#009B77"},
-                {"Waiting Support Response", "#E15D44"},
-                {"Assigned", "#F7CAC9"},
-                {"Investigating", "#7FCDCD"},
+                {"Update from Support", "#F7CAC9"}, // Rose Quartz
+                {"New", "#B565A7"} // Radiand Orchid
             };
 
             string border = null;
-            if(borders.TryGetValue(subcase.Status, out border))
+            if(DateTime.UtcNow - subcase.Created > TimeSpan.FromDays(30))
+            {
+                Border = "#BC243C"; // True Red
+                Importance = "Long Running (30+ days)";
+            }
+            else if(borders.TryGetValue(subcase.Status, out border))
             {
                 Border = border;
+                Importance = subcase.Status;
             }
-            else
-            {
-                Border = "#98B4D4";
-            }
-
-            // if(DateTime.UtcNow - subcase.Created > TimeSpan.FromDays(30))
         }
 
         public NodeColor(string background, string border = "")
@@ -49,6 +46,7 @@ namespace Armadillo.Graph
 
         public string Background { get; set; }
         public string Border { get; set; }
+        public string Importance { get; set; }
     }
 
     public class Node
