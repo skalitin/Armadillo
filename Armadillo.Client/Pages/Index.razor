@@ -11,39 +11,37 @@
 @using System.Timers
 @using Microsoft.AspNetCore.WebUtilities
 
-<div class="settings">
-
-    <div class="select-wrapper">
-        <select @bind="@ProductName">
-            @foreach (var item in ProductNames)
-            {
-                <option value="@item">@item</option>
-            }
-        </select>
+<div class="sidebar">
+    <div class="settings">
+        <div class="select-wrapper">
+            <select @bind="@ProductName">
+                @foreach (var item in ProductNames)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+        <label class="checkbox-container" for="show-customers">Show customers
+            <input type="checkbox" @bind="@ShowCustomers" id="show-customers"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class="checkbox-container" for="show-owners">Show owners
+            <input type="checkbox" @bind="@ShowOwners" id="show-owners"/>
+            <span class="checkmark"></span>
+        </label>
+        <label class="checkbox-container" for="show-graph">Graph
+            <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
+            <span class="checkmark"></span>
+        </label>
     </div>
 
-    <label class="checkbox-container" for="show-customers">Show customers
-        <input type="checkbox" @bind="@ShowCustomers" id="show-customers"/>
-        <span class="checkmark"></span>
-    </label>
+    <div class="statistics-wrapper-1">
+        <LevelStatistics Product=@ProductSubcases/>
+    </div>
 
-    <label class="checkbox-container" for="show-owners">Show owners
-        <input type="checkbox" @bind="@ShowOwners" id="show-owners"/>
-        <span class="checkmark"></span>
-    </label>
-
-    <label class="checkbox-container" for="show-graph">Graph
-        <input type="checkbox" @bind="@ShowGraph" id="show-graph"/>
-        <span class="checkmark"></span>
-    </label>
-</div>
-
-<div class="statistics-wrapper-1">
-    <LevelStatistics Product=@ProductSubcases/>
-</div>
-
-<div class="statistics-wrapper-2">
-    <StatusStatistics Product=@ProductSubcases/>
+    <div class="statistics-wrapper-2">
+        <StatusStatistics Product=@ProductSubcases/>
+    </div>
 </div>
 
 <div class="content">
