@@ -125,7 +125,11 @@ html, body {
 @media (max-width: 900px) {
     .main {
         grid-template-columns: minmax(300px, 1fr);
-        grid-template-rows: 1fr minmax(900px, 5fr);
+        grid-template-rows: 1fr minmax(600px, 5fr);
+    }
+
+    .sidebar {
+        grid-template-rows: 1fr minmax(150px, 250px) minmax(150px, 250px)
     }
 }
  
