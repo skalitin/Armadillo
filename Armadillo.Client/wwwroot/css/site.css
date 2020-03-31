@@ -9,7 +9,7 @@ html, body {
 .main {
     height: 100vh;
     display: grid;
-    grid-template-columns: 300px 1fr /* repeat(auto-fit, minmax(300px, 1fr)) */
+    grid-template-columns: 300px 1fr;
 }
 
 .sidebar {
@@ -121,3 +121,11 @@ html, body {
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
+
+@media (max-width: 900px) {
+    .main {
+        grid-template-columns: minmax(300px, 1fr);
+        grid-template-rows: 1fr minmax(900px, 5fr);
+    }
+}
+ 
