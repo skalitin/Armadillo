@@ -86,6 +86,13 @@ function RenderNetwork(network) {
     };
 
     var options = {
+        height: "99%",
+        width: "99%",
+        autoResize: false,
+        interaction: {
+          dragView: false,
+          selectable: true
+        },
         physics: {
           stabilization: false
         },      
