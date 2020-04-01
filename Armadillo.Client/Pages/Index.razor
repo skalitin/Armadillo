@@ -3,6 +3,7 @@
 
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 @using Armadillo.Graph
 @using Armadillo.Shared
@@ -134,7 +135,10 @@ else
             }
         }
 
-        ProductName = String.IsNullOrEmpty(ProductName) ? ProductNames.FirstOrDefault() : ProductName;
+        var storedProductName = await LocalStorage.GetItemAsync<string>("Product");
+        ProductName = String.IsNullOrEmpty(ProductName) 
+            ? (String.IsNullOrEmpty(storedProductName) ? ProductNames.FirstOrDefault() : storedProductName)
+            : ProductName;
         
         timer_.Elapsed += (sender, e) => ReloadSubcases();
         timer_.Enabled = true;
@@ -144,6 +148,8 @@ else
     {
         ProductSubcases = null;
         Task.Run(async () => {
+            await LocalStorage.SetItemAsync("Product", ProductName);
+
             var url = QueryHelpers.AddQueryString("api/subcases", "product", ProductName);
             ProductSubcases = await Http.GetJsonAsync<Product>(url);
             StateHasChanged();
