@@ -33,5 +33,15 @@ namespace Armadillo.Shared
         
         [JsonProperty("lastUpdate")]
         public DateTime LastUpdate { get; set; }                
+
+        public string DetailsLink
+        {
+            get {
+                // Remove '-1' from the subcase number to make it a case number.
+                // 4726164-1 -> 4726164
+                var link = $"https://supportadmin.webapps.quest.com/SRViewer/Internal/{Id}";
+                return link.Substring(0, link.Length - 2);
+            }
+        }
     }
 }

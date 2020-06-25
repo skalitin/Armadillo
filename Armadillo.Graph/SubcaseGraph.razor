@@ -39,7 +39,8 @@
             $"Created: {subcase.Created}<br>" + 
             $"Last update {subcase.LastUpdate}<br>" + 
             $"Refreshed at: {subcase.Loaded} UTC<br>" + 
-            $"{subcase.Title}";
+            $"{subcase.Title}<br><br>" + 
+            "Double-click the subcase circle for more details.";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

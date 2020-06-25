@@ -148,4 +148,12 @@ function RenderNetwork(network) {
     
     var container = document.getElementById('network-wrapper');
     window.network = new vis.Network(container, data, options);
+
+    window.network.on("doubleClick", function (params) {
+      var nodeId = params.nodes[0];
+      if(nodeId.endsWith('-1')) {
+        var caseId = nodeId.substring(0, nodeId.length - 2);
+        window.open('https://supportadmin.webapps.quest.com/SRViewer/Internal/' + caseId, '_blank');
+      }
+  });
 }

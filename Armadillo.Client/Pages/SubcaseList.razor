@@ -18,8 +18,9 @@
          <tbody>
             @foreach (var subcase in Product.Subcases)
             {
+
                 <tr>
-                    <td>@subcase.Id</td>
+                    <td><a target="_blank" href="@subcase.DetailsLink">@subcase.Id</a></td>
                     <td>@subcase.Title</td>
                     @if(ShowCustomers) { <td>@subcase.Customer</td> }
                     @if(ShowOwners) { <td>@subcase.Owner</td> }
