@@ -30,9 +30,10 @@ namespace Armadillo.Data
             _reportServerClient = reportServerClient;
         }
 
-        public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string product)
+        public async Task<IEnumerable<Subcase>> GetSubcasesAsync(string input)
         {
-            var url = GetReportLink(product, ReportFormat.XML);
+            ParseProduct(input, out (string location, string product) result);
+            var url = GetReportLink(result.location, result.product, ReportFormat.XML);
             var page = await GetReportAsync(url);
             try
             {
@@ -60,50 +61,48 @@ namespace Armadillo.Data
             }
         }
 
-        public string GetReportLink(string product)
+        public string GetReportLink(string input)
         {
-            return GetReportLink(product, ReportFormat.HTML);
+            ParseProduct(input, out (string location, string product) result);
+            return GetReportLink(result.location, result.product, ReportFormat.HTML);
         }
 
-        private string GetReportLink(string product, ReportFormat format)
+        private string GetReportLink(string location, string product, ReportFormat format)
         {
-            //var template = ReportServerUrl + 
-            //    @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=" + 
-            //    (format == ReportFormat.HTML ? "HTML4.0" : "XML") + @"&rc:LinkTarget=_top&rc:Javascript=false";
-
-            var template = ReportServerUrl +
-                @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=AMER-CA-NS-Halifax&rs:Format=" +
+            var url = ReportServerUrl +
+                @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&rs:Format=" +
                 (format == ReportFormat.HTML ? "HTML4.0" : "XML") + @"&rc:LinkTarget=_top&rc:Javascript=false";
 
-            return String.IsNullOrEmpty(product) ? template : QueryHelpers.AddQueryString(template, "Products", product);
+            url = String.IsNullOrEmpty(product)  ? url : QueryHelpers.AddQueryString(url, "Products", product);
+            url = String.IsNullOrEmpty(location) ? url : QueryHelpers.AddQueryString(url, "Location", location);
+
+            return url;
         }
 
-        public async Task<IEnumerable<string>> GetProductsAsync()
+        private async Task<IEnumerable<string>> GetLocationsAsync()
         {
-            var url = GetReportLink(product: null, ReportFormat.HTML);
+            var url = GetReportLink(location: null, product: null, ReportFormat.HTML);
             var page = await GetReportAsync(url);
             try
             {
-                var htmlDoc = new HtmlDocument();	
-                htmlDoc.LoadHtml(page);	
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(page);
+                var htmlBody = htmlDoc.DocumentNode;
 
-                var htmlBody = htmlDoc.DocumentNode;	
-                var wrapperNode = htmlBody.SelectSingleNode("//div[@id='ReportViewerControl_ctl04_ctl05_divDropDown']");
-                
-                if(wrapperNode == null) {	
-                    var message = "Cannot parse HTML report, incorrect format.";	
-                    _logger.LogError(message);	
-                    throw new ApplicationException(message);	
+                var locationsWrapperNode = htmlBody.SelectSingleNode("//div[@id='ReportViewerControl_ctl04_ctl03']");
+                if (locationsWrapperNode == null)
+                {
+                    var message = "Cannot parse HTML report, incorrect format.";
+                    _logger.LogError(message);
+                    throw new ApplicationException(message);
                 }
 
-                var nodes = wrapperNode.SelectNodes("table/tr/td/span/label");
-                
-                // First two elements are "(Select All)" and " All"
-                var products = nodes.Select(each => each.InnerText.Replace("&nbsp;", " ")).Skip(2);
-                
-                _logger.LogDebug("Parsed products: {products}", products);
-                return products;
+                // First element is  "(Select Value)"
+                var locationNodes = locationsWrapperNode.SelectNodes("select/option");
+                var locations = locationNodes.Select(each => each.InnerText.Replace("&nbsp;", " ")).Skip(1);
+                _logger.LogDebug("Parsed locations: {locations}", locations);
 
+                return locations;
             }
             catch (XmlException exception)
             {
@@ -113,11 +112,58 @@ namespace Armadillo.Data
             }
         }
 
+        private async Task<IEnumerable<string>> GetProductsAsync(string location)
+        {
+            var url = GetReportLink(location, product: null, ReportFormat.HTML);
+            var page = await GetReportAsync(url);
+            try
+            {
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(page);
+                var htmlBody = htmlDoc.DocumentNode;
+
+                var productsWrapperNode = htmlBody.SelectSingleNode("//div[@id='ReportViewerControl_ctl04_ctl05_divDropDown']");
+                if (productsWrapperNode == null)
+                {
+                    var message = "Cannot parse HTML report, incorrect format.";
+                    _logger.LogError(message);
+                    throw new ApplicationException(message);
+                }
+
+                // First two elements are "(Select All)" and " All"
+                var productNodes = productsWrapperNode.SelectNodes("table/tr/td/span/label");
+                var products = productNodes.Select(each => each.InnerText.Replace("&nbsp;", " ")).Skip(2);
+                _logger.LogDebug("Parsed {location} products: {products}", location, products);
+
+                return products;
+            }
+            catch (XmlException exception)
+            {
+                const string message = "Cannot parse HTML report, incorrect format.";
+                _logger.LogError(exception, message);
+                throw new ApplicationException(message);
+            }
+        }
+
+        public async Task<IEnumerable<string>> GetProductsAsync()
+        {
+            var products = new List<string>();
+            var locations = await GetLocationsAsync();
+            foreach(var location in locations)
+            {
+                foreach(var product in await GetProductsAsync(location))
+                {
+                    products.Add($"{location} | {product}");
+                }
+            }
+            
+            _logger.LogDebug("All products: {products}", products);
+            return products;
+        }
+
         private async Task<string> GetReportAsync(string url)
         {
             _logger.LogDebug("Loading report {url}", url);
-
-            var uri = new Uri(url);
             return await _reportServerClient.GetReportAsync(url);
         }
         
@@ -125,6 +171,20 @@ namespace Armadillo.Data
         {
             DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result);
             return result;
+        }
+
+        private static void ParseProduct(string input, out (string location, string product) result)
+        {
+            var parts = input.Split('|');
+            if (parts.Length == 2)
+            {
+                result.location = parts[0].Trim();
+                result.product = parts[1].Trim();
+            }
+            else
+            {
+                result.location = result.product = null;
+            }
         }
     }
 }

@@ -76,8 +76,8 @@ namespace Armadillo.Data.Tests
                 .ReturnsAsync(report);
 
             var products = await _dataProvider.GetProductsAsync();
-            Assert.AreEqual("InTrust", products.First());
-            CollectionAssert.Contains(products, "Recovery Manager for AD");
+            Assert.AreEqual("AMER-CA-NS-Halifax | InTrust", products.First());
+            CollectionAssert.Contains(products, "AMER-CA-NS-Halifax | Recovery Manager for AD");
         }
 
         private string GetReport(string name)
