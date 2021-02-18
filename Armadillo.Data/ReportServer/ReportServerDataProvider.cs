@@ -67,8 +67,12 @@ namespace Armadillo.Data
 
         private string GetReportLink(string product, ReportFormat format)
         {
-            var template = ReportServerUrl + 
-                @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=" + 
+            //var template = ReportServerUrl + 
+            //    @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=EMEA-RU-St.%20Petersburg&rs:Format=" + 
+            //    (format == ReportFormat.HTML ? "HTML4.0" : "XML") + @"&rc:LinkTarget=_top&rc:Javascript=false";
+
+            var template = ReportServerUrl +
+                @"/ReportServer?/Siebel/SPB/SLA+Siebel+(SPb)&rs:Command=Render&Location=AMER-CA-NS-Halifax&rs:Format=" +
                 (format == ReportFormat.HTML ? "HTML4.0" : "XML") + @"&rc:LinkTarget=_top&rc:Javascript=false";
 
             return String.IsNullOrEmpty(product) ? template : QueryHelpers.AddQueryString(template, "Products", product);
