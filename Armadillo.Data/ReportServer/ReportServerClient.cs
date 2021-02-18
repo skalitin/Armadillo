@@ -10,6 +10,7 @@ namespace Armadillo.Data
         public ReportServerClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _httpClient.Timeout = System.TimeSpan.FromMinutes(5);
         }
 
         public async Task<string> GetReportAsync(string uri)
